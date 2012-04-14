@@ -1,4 +1,4 @@
-require "lib/crypto"
+require File.join(Dir.pwd, "lib", "crypto")
 
 class Pad < Sequel::Model
   def initialize(text, password)
