@@ -1,7 +1,7 @@
 require "sinatra/base"
 require "set"
-require "lib/db"
-require "models/pad"
+require File.join(Dir.pwd, "lib", "db")
+require File.join(Dir.pwd, "models", "pad")
 require "coffee-script"
 require "sass"
 
