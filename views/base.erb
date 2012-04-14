@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <!--  begin TWITTER bootstrap -->
+    <script src="/twitter_bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/twitter_bootstrap/css/bootstrap.min.css"/>
+    <!-- end bootstrap -->
+
+    <link rel="stylesheet" type="text/css" href="/css/common.scss"/>
+    <link rel="stylesheet" type="text/css" href="/css/<%= template %>.scss"/>
+    <script src="/js/<%= template %>.coffee"></script>
+  </head>
+  <body data-twttr-rendered="true">
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a href="/" class="brand">CryptoPad</a>
+          <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li><a href="#">Signup</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container main">
+      <%= erb template %>
+    </div>
+    <div class="container footer">
+      <div class="row">
+        <div class="span1 offset4"><a href="#">About</a></div>
+        <div class="span1"><a href="#">Contact</a></div>
+        <div class="span1"><a href="#">Like</a></div>
+        <div class="span1"><a href="#">Tweet</a></div>
+        <div class="span1"><a href="#">G+</a></div>
+      </div>
+    </div>
+    
+  </body>
+</html>

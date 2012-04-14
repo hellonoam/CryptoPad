@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="span2"><p>Your pad is ready...</p></div>
+  <div class="span6 offset1">
+    <div class="row">
+      <textarea placeholder="your secret message" class="input-xlarge"></textarea>
+      <div>
+        <input type="button" data-target="#passwordModal" id="submitPad" data-toggle="modal" class="btn btn-warning" value="submit">
+      </div>
+    </div>
+  </div>
+  <div class="span3 points">
+    <div class="row">
+      <ul>
+        <li><p>we'll ask you for a password after you hit submit</p></li>
+        <li><p>the pad will self destruct 7 days from now</p></li>
+        <li><p>you'll get a link to share when you're done</p></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() { new window.Create(); });
+</script>
+
+<!-- modal dialog for password, only shown after click -->
+<div class="modal hide" id="passwordModal">
+  <div class="modal-body">
+    <a class="close" data-dismiss="modal">×</a>
+    <div class="row">
+      <h3 class="span3">Choose your password</h3>
+      <!-- TODO: add note that your colleague will have to know this password -->
+      <input class="span2" type="password" id="password">
+      <input type="button" data-dismiss="modal" class="btn btn-warning" id="passwordDone" value="Done">
+    </div>
+  </div>
+</div>

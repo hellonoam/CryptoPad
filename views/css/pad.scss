@@ -1,0 +1,24 @@
+.main {
+  textarea {
+    width: 450px;
+    height: 300px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  p {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 27px;
+  }
+  #passwordModal {
+    input[type=password] {
+      margin-left: 30px;
+    }
+    #passwordDone {
+      margin-left: 30px;
+      margin-top: -9px;
+    }
+  }
+  
+}

@@ -1,0 +1,18 @@
+POST /pads
+params:
+  {
+    text: "texts",
+    password: "pass"
+  }
+response:
+  { pad_hash: "hash" }
+
+GET /pads/:pad_hash
+params:
+  { password: "pass" }
+response:
+  { text: "texts" }
+
+GET /
+
+  

@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="span2"><p>The pad is here...</p></div>
+  <div class="span6 offset1">
+    <div class="row">
+      <textarea class="input-xlarge"></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() { init(); });
+</script>
+
+
+<!-- modal dialog for password shown on load -->
+<div class="modal hide" id="passwordModal">
+  <div class="modal-body">
+    <div class="row">
+      <h3 class="span2 offset1">Enter password</h3>
+      <input class="span2" type="password" id="password">
+      <input type="button" data-dismiss="modal" class="btn btn-warning" id="passwordDone" value="Done">
+    </div>
+  </div>
+</div>
