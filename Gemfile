@@ -3,11 +3,11 @@ gem "sinatra"
 gem "sinatra-reloader"
 gem "thin"
 gem "rake"
-gem "sqlite3"
 gem "sequel"
 gem "coffee-script"
 gem "sass"
 
-group :development do
+group :development, :test do
   gem "pry"
+  gem "sqlite3"
 end
