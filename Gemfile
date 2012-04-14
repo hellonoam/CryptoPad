@@ -6,10 +6,10 @@ gem "rake"
 gem "sequel"
 gem "coffee-script"
 gem "sass"
-gem "sqlite3"
 
 group :development, :test do
   gem "pry"
+  gem "sqlite3"
 end
 
 group :production do
