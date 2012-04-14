@@ -13,6 +13,7 @@ GEM
       multi_json (~> 1.0)
     method_source (0.7.1)
     multi_json (1.1.0)
+    pg (0.13.2)
     pry (0.9.8.4)
       coderay (~> 1.0.5)
       method_source (~> 0.7.1)
@@ -51,6 +52,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-script
+  pg
   pry
   rake
   sass
