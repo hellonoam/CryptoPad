@@ -1,0 +1,16 @@
+#! /usr/bin/env ruby
+# require lib/db and then we can remove this line and the "DB =" line.
+require "sequel"
+
+DB_MIGRATIONS_DIR = "db/migrations"
+
+if File.basename(Dir.pwd) == "bin"
+  puts "Run this script from the parent directory"
+  exit 1
+end
+
+Sequel.extension(:migration)
+
+DB = Sequel.connect(ENV["DATABASE_URL"] || "sqlite://db/dev.sqlite")
+
+Sequel::Migrator.apply(DB, DB_MIGRATIONS_DIR)
