@@ -50,6 +50,7 @@ class PadApp < Sinatra::Base
 
   get "/pads/:hash_id/authenticate" do
     pad = Pad[:hash_id => params[:hash_id]]
+    halt 400, "invalid hash_id" if pad.nil?
     halt 401, "incorrect password" unless pad.correct_pass?(params[:password])
     pad.decrypt_text(params[:password])
   end
