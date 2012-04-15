@@ -44,7 +44,8 @@ class PadApp < Sinatra::Base
   end
 
   get "/link/:hash_id" do
-    pad_link = "#{request.host}/pads/#{params[:hash_id]}"
+    port = request.port == 80 ? "" : ":#{request.port}"
+    pad_link = "#{request.host}#{port}/pads/#{params[:hash_id]}"
     erb :link, :locals => { :pad_link => pad_link }
   end
 
