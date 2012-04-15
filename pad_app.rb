@@ -11,7 +11,6 @@ class PadApp < Sinatra::Base
 
   enable :logging
 
-
   configure :development do
     use Rack::CommonLogger
     $stderr.sync
