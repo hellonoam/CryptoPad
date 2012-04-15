@@ -44,7 +44,7 @@ class PadApp < Sinatra::Base
   end
 
   get "/link/:hash_id" do
-    pad_link = "localhost:8080/pads/#{params[:hash_id]}"
+    pad_link = "#{request.host}/pads/#{params[:hash_id]}"
     erb :link, :locals => { :pad_link => pad_link }
   end
 
