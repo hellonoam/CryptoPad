@@ -13,7 +13,6 @@ class window.Create
           text: text
           password: pass
         success: (data) ->
-          console.log(data.hash_id)
           $.ajax
             url: "/link/#{data.hash_id}"
             success: (linkHtml) ->
