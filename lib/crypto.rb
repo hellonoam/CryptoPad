@@ -11,10 +11,11 @@ module Crypto
     aes.encrypt
     aes.key = key
     aes.iv = AES_IV
-    aes.update(plain_text) + aes.final
+    Base64::encode64(aes.update(plain_text) + aes.final)
   end
 
   def self.decrypt(encrypted_text, password, salt)
+    encrypted_text = Base64::decode64(encrypted_text)
     key = Digest::SHA256.digest(password + salt)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.decrypt
@@ -24,7 +25,7 @@ module Crypto
   end
 
   def self.digest(text)
-    Digest::SHA256.hexdigest(text + Time.now.to_s)[1..16]
+    Base64::encode64(Digest::SHA256.hexdigest(text + Time.now.to_s))[1..16]
   end
 
   def self.generate_salt
