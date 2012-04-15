@@ -2,9 +2,9 @@
   <div class="span2"><p>Your pad is ready...</p></div>
   <div class="span6 offset1">
     <div class="row">
-      <textarea placeholder="your secret message" class="input-xlarge"></textarea>
+      <textarea autofocus placeholder="your secret message" class="input-xlarge"></textarea>
       <div>
-        <input type="button" data-target="#passwordModal" id="submitPad" data-toggle="modal" class="btn btn-warning" value="submit">
+        <input type="button" id="submitPad" class="btn btn-warning" value="submit">
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@
     <div class="row">
       <h3 class="span3">Choose your password</h3>
       <!-- TODO: add note that your colleague will have to know this password -->
-      <input class="span2" type="password" id="password">
+      <input autofocus class="span2" type="password" id="password">
       <input type="button" data-dismiss="modal" class="btn btn-warning" id="passwordDone" value="Done">
     </div>
   </div>
