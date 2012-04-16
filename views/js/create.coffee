@@ -7,8 +7,11 @@ class window.Create
 
     # launching the password dialog.
     $("#submitPad").click(->
-      # TODO: add a tooltip maybe.
-      return $("textarea").addClass("error") if $("textarea").val() is ""
+      if $("textarea").val() is ""
+        $("textarea").tooltip({ title: "textarea is empty", trigger: "manual" })
+        $("textarea").tooltip("show")
+        setTimeout((-> $("textarea").tooltip("hide")), 2000)
+        return $("textarea").addClass("error")
       $("#passwordModal").modal()
     )
 
@@ -19,7 +22,12 @@ class window.Create
     $("#passwordDone").click(->
       text = $("textarea").val()
       pass = $("#password").val()
-      return $("#password").addClass("error")  if pass is ""
+      if pass is ""
+        $("#password").tooltip({ title: "choose a better password", trigger: "manual" })
+        $("#password").tooltip("show")
+        setTimeout((-> $("#password").tooltip("hide")), 2000)
+        return $("#password").addClass("error")
+      $("#passwordModal").modal("hide")
       $.ajax
         url: "/pads"
         type: "POST"
