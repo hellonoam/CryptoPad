@@ -29,7 +29,7 @@ module Crypto
   # Creates a hash of the given text using the currect time and a random number, hence the function will
   # return different results when calling it with the same args.
   def self.digest(text)
-    Base64::encode64(Digest::SHA256.hexdigest(text + Time.now.to_s + Random.rand(100)))[1..16]
+    Base64::encode64(Digest::SHA256.hexdigest(text + Time.now.to_s + Random.rand(100).to_s))[1..16]
   end
 
   def self.generate_salt
