@@ -4,10 +4,11 @@ require "openssl"
 
 module Crypto
   AES_IV = "57e72a8de8529d189a0a9e9364855398921"
+  RANDOM_STRING = "cryptoPadRulz"
 
   # Encrypts the plain_text using the password and salt, the result is base64 encoded.
   def self.encrypt(plain_text, password, salt)
-    key = Digest::SHA256.digest(password + salt)
+    key = Digest::SHA256.digest(password + RANDOM_STRING + salt)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.encrypt
     aes.key = key
@@ -18,7 +19,7 @@ module Crypto
   # Decrypts
   def self.decrypt(encrypted_text, password, salt)
     encrypted_text = Base64::decode64(encrypted_text)
-    key = Digest::SHA256.digest(password + salt)
+    key = Digest::SHA256.digest(password + RANDOM_STRING + salt)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.decrypt
     aes.key = key
@@ -33,6 +34,6 @@ module Crypto
   end
 
   def self.generate_salt
-    self.digest("cryptoPadRulz")[1..5]
+    self.digest(RANDOM_STRING)[1..5]
   end
 end
