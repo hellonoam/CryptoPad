@@ -21,11 +21,13 @@ class PadApp < Sinatra::Base
     also_reload "*/*.rb"
   end
 
+  # Compile coffeescript files that are in the views folder
   get "/js/*.coffee" do |fileName|
     content_type "text/javascript", :charset => "utf-8"
     coffee "/js/#{fileName}".to_sym
   end
 
+  # Compile scss files that are in the views folder
   get "/css/*.scss" do |fileName|
     content_type "text/css", :charset => "utf-8"
     scss "/css/#{fileName}".to_sym, :style => :expanded
@@ -49,6 +51,7 @@ class PadApp < Sinatra::Base
     erb :link, :locals => { :pad_link => pad_link }
   end
 
+  # Returns the pad's text if the password was correct
   get "/pads/:hash_id/authenticate" do
     pad = Pad[:hash_id => params[:hash_id]]
     halt 400, "invalid hash_id" if pad.nil?
@@ -56,6 +59,7 @@ class PadApp < Sinatra::Base
     pad.decrypt_text(params[:password])
   end
 
+  # Creates and new pad and returns the hash_id
   post "/pads" do
     pad = Pad.new(params[:text], params[:password])
     pad.save
@@ -65,6 +69,7 @@ class PadApp < Sinatra::Base
 
   private
 
+  # Renders the template with the base template which requires the template's coffee and scss file.
   def render_with_layout(template)
     erb :base, :locals => {:template => template }
   end
