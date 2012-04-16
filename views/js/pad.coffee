@@ -12,7 +12,7 @@
         $("textarea").val(data)
       error: (data) ->
         $("#password").addClass("error")
-        $("#password").tooltip({ title: "incorrect password", trigger: "manual" })
+        $("#password").tooltip( title: "incorrect password", trigger: "manual" )
         $("#password").tooltip("show")
         setTimeout((-> $("#password").tooltip("hide")), 2000)
   )
