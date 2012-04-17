@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" type="text/css" href="/css/common.scss"/>
     <link rel="stylesheet" type="text/css" href="/css/<%= template %>.scss"/>
+    <script src="/js/common.coffee"></script>
     <script src="/js/<%= template %>.coffee"></script>
     <script type="text/javascript">
 
@@ -32,7 +33,7 @@
           <a href="/" class="brand">CryptoPad</a>
           <ul class="nav pull-right">
             <li class="divider-vertical"></li>
-            <li><a href="#">Signup</a></li>
+            <li><a data-toggle="modal" href="#signupModal">keep in touch</a></li>
           </ul>
         </div>
       </div>
@@ -49,6 +50,24 @@
         <div class="span1"><a href="#">G+</a></div>
       </div>
     </div>
-    
+
+    <!-- signup modal dialog, hidden until signup is clicked -->
+    <div class="modal hide" id="signupModal">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Keep in touch</h3>
+      </div>
+      <div class="modal-body">
+        <p>We have a lot of features in the pipeline, signup and we'll
+          let you know when the features are out. We'll never spam you, promise</p>
+        <div class="row">
+            <h3 class="span2 offset1">your email:</h3>
+            <input class="span2" type="email">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#signupModal" data-toggle="modal" id="signup" class="btn btn-primary">Signup</a>
+      </div>
+    </div>
   </body>
 </html>

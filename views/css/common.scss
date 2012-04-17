@@ -17,3 +17,11 @@ body {
 .error {
   border-color: red;
 }
+
+.modal-backdrop {
+  opacity: 0.4;
+}
+
+#signupModal .modal-body .row {
+  margin-top: 20px;
+}

@@ -2,6 +2,7 @@ require "sinatra/base"
 require "set"
 require File.join(Dir.pwd, "lib", "db")
 require File.join(Dir.pwd, "models", "pad")
+require File.join(Dir.pwd, "models", "user")
 require "coffee-script"
 require "sass"
 
@@ -65,6 +66,11 @@ class PadApp < Sinatra::Base
     pad.save
     content_type "application/json"
     { :hash_id => pad.hash_id.to_s }.to_json
+  end
+
+  post "/user" do
+    User.new(:email => params[:email]).save
+    ""
   end
 
   private
