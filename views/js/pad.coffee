@@ -16,3 +16,5 @@
         $("#password").tooltip("show")
         setTimeout((-> $("#password").tooltip("hide")), 2000)
   )
+
+$(document).ready(=> @init() );

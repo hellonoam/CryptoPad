@@ -40,3 +40,6 @@
       error: (data) ->
         console.log("ERROR: #{data}")
   )
+
+
+$(document).ready(=> @init() );
