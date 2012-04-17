@@ -1,5 +1,8 @@
 class Common
   @init = ->
+    $("#signupModal input[type=email]").keypress( (event) ->
+      $("#signupModal #signup").click() if event.keyCode is 13
+    )
     $("#signupModal #signup").click(=>
       email = $("#signupModal input[type=email]").val()
       if email is ""
