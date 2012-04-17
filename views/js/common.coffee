@@ -1,4 +1,4 @@
-class Common
+class window.Common
   @init = ->
     $("#signupModal input[type=email]").keypress( (event) ->
       $("#signupModal #signup").click() if event.keyCode is 13
