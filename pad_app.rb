@@ -90,7 +90,7 @@ class PadApp < Sinatra::Base
   end
 
   def do_cron_job
-    if !defined?(@@last_cron_run).nil? && @@last_cron_run > (Time.now - 10)
+    if !defined?(@@last_cron_run).nil? && @@last_cron_run > (Time.now - 3600)
       return "cron job last ran on #{@@last_cron_run} and wasn't run again."
     end
     @@last_cron_run = Time.now
