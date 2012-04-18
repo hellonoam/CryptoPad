@@ -7,14 +7,15 @@ module Crypto
   @@CHARSET = [('a'..'z'),('A'..'Z'),(0..9)].map{ |i| i.to_a }.flatten
 
   # Encrypts the plain_text using the password and salt, the result is base64 encoded.
-  def self.encrypt(plain_text, password, salt)
+  def self.encrypt(plain_text, password, salt, iv = nil)
     password = Digest::SHA256.digest(password + RANDOM_STRING + salt)
     key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 2000, 256)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.encrypt
     aes.key = key
-    aes.iv = aes.random_iv
-    Base64::encode64(aes.update(plain_text) + aes.final), aes.iv
+    iv ||= aes.random_iv
+    aes.iv = iv
+    [Base64::encode64(aes.update(plain_text) + aes.final), iv]
   end
 
   # Decrypts
