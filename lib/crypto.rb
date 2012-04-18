@@ -3,37 +3,42 @@ require "base64"
 require "openssl"
 
 module Crypto
-  AES_IV = "57e72a8de8529d189a0a9e9364855398921"
   RANDOM_STRING = "cryptoPadRulz"
+  @@CHARSET = [('a'..'z'),('A'..'Z'),(0..9)].map{ |i| i.to_a }.flatten
 
   # Encrypts the plain_text using the password and salt, the result is base64 encoded.
   def self.encrypt(plain_text, password, salt)
-    key = Digest::SHA256.digest(password + RANDOM_STRING + salt)
+    password = Digest::SHA256.digest(password + RANDOM_STRING + salt)
+    key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 2000, 256)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.encrypt
     aes.key = key
-    aes.iv = AES_IV
-    Base64::encode64(aes.update(plain_text) + aes.final)
+    aes.iv = aes.random_iv
+    Base64::encode64(aes.update(plain_text) + aes.final), aes.iv
   end
 
   # Decrypts
-  def self.decrypt(encrypted_text, password, salt)
+  def self.decrypt(encrypted_text, password, salt, iv)
     encrypted_text = Base64::decode64(encrypted_text)
-    key = Digest::SHA256.digest(password + RANDOM_STRING + salt)
+    password = Digest::SHA256.digest(password + RANDOM_STRING + salt)
+    key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 2000, 256)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.decrypt
     aes.key = key
-    aes.iv = AES_IV
+    aes.iv = iv
     aes.update(encrypted_text) + aes.final
   end
 
-  # Creates a hash of the given text using the currect time and a random number, hence the function will
-  # return different results when calling it with the same args.
-  def self.digest(text)
-    Base64::encode64(Digest::SHA256.hexdigest(text + Time.now.to_s + Random.rand(100).to_s))[1..16]
+  # Creates a random string of length 'length', the string is built from chars specified in CHARSET
+  def self.random_string(length)
+    (1..length).map{ |char| @@CHARSET[Random.rand(@@CHARSET.length)] }.join
+  end
+
+  def self.generate_hash_id
+    self.random_string(16)
   end
 
   def self.generate_salt
-    self.digest(RANDOM_STRING)[1..5]
+    self.random_string(5)
   end
 end
