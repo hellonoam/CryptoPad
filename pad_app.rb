@@ -12,6 +12,11 @@ class PadApp < Sinatra::Base
 
   enable :logging
 
+  def initialize
+    super
+    puts do_cron_job()
+  end
+
   configure :development do
     use Rack::CommonLogger
     $stderr.sync
@@ -68,6 +73,10 @@ class PadApp < Sinatra::Base
     { :hash_id => pad.hash_id.to_s }.to_json
   end
 
+  post "/cron_job" do
+    do_cron_job
+  end
+
   post "/user" do
     User.new(:email => params[:email]).save
     ""
@@ -78,6 +87,14 @@ class PadApp < Sinatra::Base
   # Renders the template with the base template which requires the template's coffee and scss file.
   def render_with_layout(template)
     erb :base, :locals => {:template => template }
+  end
+
+  def do_cron_job
+    if !defined?(@@last_cron_run).nil? && @@last_cron_run > (Time.now - 3600)
+      return "cron job last ran on #{@@last_cron_run} and wasn't run again."
+    end
+    @@last_cron_run = Time.now
+    `rake delete_old_pads`
   end
 end
   
