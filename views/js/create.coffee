@@ -1,5 +1,7 @@
 class Create
   @init = ->
+    $("#securityButton, #filesButton").tooltip({ title: "private beta" })
+
     # launching the password dialog.
     $("#submitPad").click(->
       return Common.showErrorTooltip($("textarea"), "textarea is empty") if $("textarea").val() is ""
