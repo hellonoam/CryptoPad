@@ -4,9 +4,9 @@ class Pad < Sequel::Model
   # Creates a new pad with the text and password.
   def initialize(text, password)
     salt = Crypto.generate_salt
-    encrypted_text = Crypto.encrypt(text, password, salt)
-    encrypted_success, iv = Crypto.encrypt("success", password, salt)
-    super(:hash_id => Crypto.generate_hash_id(encrypted_text), :text => encrypted_text, :salt => salt,
+    encrypted_text, iv = Crypto.encrypt(text, password, salt)
+    encrypted_success, _ = Crypto.encrypt("success", password, salt, iv)
+    super(:hash_id => Crypto.generate_hash_id, :text => encrypted_text, :salt => salt,
         :success => encrypted_success, :die_time => Time.now + 3600 * 24 * 7, # 7 days from now
         :encrypt_method => "password", :iv => iv)
   end
