@@ -13,9 +13,9 @@ module Crypto
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.encrypt
     aes.key = key
-    iv ||= aes.random_iv
+    iv ||= Base64::encode64(aes.random_iv)
     aes.iv = iv
-    [Base64::encode64(aes.update(plain_text) + aes.final), Base64::encode64(iv)]
+    [Base64::encode64(aes.update(plain_text) + aes.final), iv]
   end
 
   # Decrypts
@@ -26,7 +26,7 @@ module Crypto
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.decrypt
     aes.key = key
-    aes.iv = Base64::decode64(iv)
+    aes.iv = iv
     aes.update(encrypted_text) + aes.final
   end
 
