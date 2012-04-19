@@ -4,7 +4,7 @@ require "openssl"
 
 module Crypto
   RANDOM_STRING = "cryptoPadRulz"
-  @@CHARSET = [('a'..'z'),('A'..'Z'),(0..9)].map{ |i| i.to_a }.flatten
+  @@CHARSET = [('a'..'z'),('A'..'Z'),('0'..'9')].map{ |i| i.to_a }.flatten
 
   # Encrypts the plain_text using the password and salt, the result is base64 encoded.
   def self.encrypt(plain_text, password, salt, iv = nil)
