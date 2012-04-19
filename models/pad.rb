@@ -5,9 +5,9 @@ class Pad < Sequel::Model
   def initialize(text, password)
     salt = Crypto.generate_salt
     encrypted_text, iv = Crypto.encrypt(text, password, salt)
-    encrypted_success, _ = Crypto.encrypt("success", password, salt, iv)
+    hashed_password = Crypto.hash_password(password, salt)
     super(:hash_id => Crypto.generate_hash_id, :text => encrypted_text, :salt => salt,
-        :success => encrypted_success, :die_time => Time.now + 3600 * 24 * 7, # 7 days from now
+        :hashed_password => hashed_password, :die_time => Time.now + 3600 * 24 * 7, # 7 days from now
         :encrypt_method => "password", :iv => iv)
   end
 
@@ -17,11 +17,7 @@ class Pad < Sequel::Model
   end
 
   def correct_pass?(password)
-    begin # TODO(noam): see if there's a better way to do this.
-      Crypto.decrypt(self.success, password, self.salt, self.iv) == "success"
-    rescue
-      false
-    end
+    Crypto.hash_password(password, self.salt) == self.hashed_password
   end
 
   def decrypt_text(password)
