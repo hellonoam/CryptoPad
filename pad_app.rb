@@ -5,6 +5,7 @@ require File.join(Dir.pwd, "models", "pad")
 require File.join(Dir.pwd, "models", "user")
 require "coffee-script"
 require "sass"
+require "json"
 
 class PadApp < Sinatra::Base
 
