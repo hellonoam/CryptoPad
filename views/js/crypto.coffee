@@ -1,4 +1,4 @@
-class window.Crypto #check if works without window
+class window.Crypto
   @RANDOM_STRING = "WNHx8qMKqooe6L796Dsm"
 
   @PBKDF2 = (pass, convert_to_string = false) ->
@@ -20,9 +20,6 @@ class window.Crypto #check if works without window
 
   # decrypts the ciphertext with the master data key
   @decrypt = (ciphertext, nakedPass, salt, iv) ->
-    return "" if ciphertext is ""
-    ciphertext = ciphertext[0] if ciphertext instanceof Array
-    return "" if (!ciphertext || ciphertext == "")
     key = @PBKDF2(nakedPass + @RANDOM_STRING + salt)
     data = JSON.stringify( ct: ciphertext, iv: iv )
     sjcl.decrypt(key, data, {}, {})
