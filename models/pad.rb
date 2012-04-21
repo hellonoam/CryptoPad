@@ -10,8 +10,8 @@ class Pad < Sequel::Model
     args[:die_time] = Time.now + 3600 * 24 * 7 # 7 days from now
     args[:salt] ||= Crypto.generate_salt
     args[:hashed_password] = Crypto.hash_password(params[:password], args[:salt])
-    unless args[:encrypt_method] == "client-side"
-      args[:encrypt_method] = "server-side"
+    unless args[:encrypt_method] == "client_side"
+      args[:encrypt_method] = "server_side"
       args[:encrypted_text], args[:iv] = Crypto.encrypt(params[:text], params[:password], args[:salt])
     end
     super(args)
@@ -23,7 +23,8 @@ class Pad < Sequel::Model
   end
 
   def public_model
-    self.to_json
+    { :salt => self.salt, :iv => self.iv, :encrypted_text => self.encrypted_text,
+      :encrypt_method => self.encrypt_method }
   end
 
   def correct_pass?(password)

@@ -13,7 +13,7 @@ describe "The Pad App" do
     builder.adapter :net_http
   end
 
-  it "creates a pad and then retrieves it" do
+  it "creates a pad and then retrieves it while using server side encryption" do
     # Adding a new pad
     last_response = @@conn.post "/pads", { :text => "mytext", :password => "mypass" }
     last_response.status.should == 200
@@ -22,7 +22,8 @@ describe "The Pad App" do
     # Checking retrieving works
     last_response = @@conn.get "/pads/#{hash_id}/authenticate?password=mypass"
     last_response.status.should == 200
-    (last_response.body == "mytext").should == true
+    JSON.parse(last_response.body)["text"].should == "mytext"
+    JSON.parse(last_response.body)["encrypt_method"].should == "server_side"
 
     # Deletes the pad
     Pad[:hash_id => hash_id].destroy

@@ -45,11 +45,11 @@ class PadApp < Sinatra::Base
   end
 
   get "/create" do
-    render_with_layout(:create)
+    render_with_layout(:create, "sjcl.js", "crypto.coffee")
   end
 
   get "/pads/:hash_id" do
-    render_with_layout(:pad)
+    render_with_layout(:pad, "sjcl.js", "crypto.coffee")
   end
 
   get "/link/:hash_id" do
@@ -63,10 +63,11 @@ class PadApp < Sinatra::Base
     pad = Pad[:hash_id => params[:hash_id]]
     halt 400, "invalid hash_id" if pad.nil?
     halt 401, "incorrect password" unless pad.correct_pass?(params[:password])
-    if pad.encrypt_method == "client-side"
-      pad.public_model
+    content_type "application/json"
+    if pad.encrypt_method == "client_side"
+      pad.public_model.to_json
     else
-      pad.decrypt_text(params[:password])
+      { :encrypt_method => pad.encrypt_method, :text => pad.decrypt_text(params[:password]) }.to_json
     end
   end
 
@@ -90,8 +91,10 @@ class PadApp < Sinatra::Base
   private
 
   # Renders the template with the base template which requires the template's coffee and scss file.
-  def render_with_layout(template)
-    erb :base, :locals => { :template => template }
+  def render_with_layout(template, *additional_js)
+    script_tags = ""
+    additional_js.each { |fileName| script_tags << "<script src='/js/#{fileName}'></script>" }
+    erb :base, :locals => { :template => template, :script_tags => script_tags }
   end
 
   def do_cron_job
