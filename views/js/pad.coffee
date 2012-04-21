@@ -9,11 +9,11 @@ class Pad
         data:
           password: Crypto.PBKDF2(nakedPass, true)
         success: (data) ->
-          $("#passwordModal").modal("hide")
           if data.encrypt_method == "server_side"
             $("textarea").val(data.text)
           else
             $("textarea").val(Crypto.decrypt(data.encrypted_text, nakedPass, data.salt, data.iv))
+          $("#passwordModal").modal("hide")
         error: (data) ->
           Common.showErrorTooltip($("#password"), "incorrect password")
     )
