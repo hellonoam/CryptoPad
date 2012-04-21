@@ -10,6 +10,8 @@ gem "sass"
 group :development, :test do
   gem "pry"
   gem "sqlite3"
+  gem "rspec"
+  gem "faraday"
 end
 
 group :production do

@@ -15,7 +15,7 @@ class PadApp < Sinatra::Base
 
   def initialize
     super
-    puts do_cron_job()
+    puts do_cron_job
   end
 
   configure :development do
@@ -63,12 +63,16 @@ class PadApp < Sinatra::Base
     pad = Pad[:hash_id => params[:hash_id]]
     halt 400, "invalid hash_id" if pad.nil?
     halt 401, "incorrect password" unless pad.correct_pass?(params[:password])
-    pad.decrypt_text(params[:password])
+    if pad.encrypt_method == "client-side"
+      pad.public_model
+    else
+      pad.decrypt_text(params[:password])
+    end
   end
 
   # Creates and new pad and returns the hash_id
   post "/pads" do
-    pad = Pad.new(params[:text], params[:password])
+    pad = Pad.new(params)
     pad.save
     content_type "application/json"
     { :hash_id => pad.hash_id.to_s }.to_json
@@ -87,7 +91,7 @@ class PadApp < Sinatra::Base
 
   # Renders the template with the base template which requires the template's coffee and scss file.
   def render_with_layout(template)
-    erb :base, :locals => {:template => template }
+    erb :base, :locals => { :template => template }
   end
 
   def do_cron_job
