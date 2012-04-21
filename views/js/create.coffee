@@ -1,11 +1,12 @@
-class Create
-  @client_side = true
+class window.Create
+  @client_side = false
 
   @init = ->
-    $("#securityButton, #filesButton").tooltip({ title: "private beta" })
+    $("#securityButton").tooltip({ title: "private beta" })
 
     # launching the password dialog.
-    $("#submitPad").click(->
+    $("#submitPad").click(=>
+      # @uploadFile($("input[type=file]")[0].files[0])
       return Common.showErrorTooltip($("textarea"), "textarea is empty") if $("textarea").val() is ""
       $("#passwordModal").modal()
     )
@@ -17,26 +18,31 @@ class Create
     $("#passwordDone").click(=>
       text = $("textarea").val()
       nakedPass = $("#password").val()
+      return Common.showErrorTooltip($("#password"), "choose a better password") if nakedPass is ""
       pass = Crypto.PBKDF2(nakedPass, true)
+      formData = new FormData()
       if @client_side
         # TODO: make this random.
         salt = "salty"
         cryptedHash = JSON.parse(Crypto.encrypt(text, nakedPass, salt))
-        data =
-          password: pass
-          salt: salt
-          iv: cryptedHash.iv
-          encrypted_text: cryptedHash.ct
-          encrypt_method: "client_side"
+        formData.append("password", pass)
+        formData.append("salt", salt)
+        formData.append("iv", cryptedHash.iv)
+        formData.append("encrypted_text", cryptedHash.ct)
+        formData.append("encrypt_method", "client_side")
       else
-        data = { text: text, password: pass }
-      return Common.showErrorTooltip($("#password"), "choose a better password") if pass is ""
-      $("#passwordModal").modal("hide")
+        formData.append("password", pass)
+        formData.append("text", text)
+      file = $("input[type=file]")[0].files[0]
+      formData.append("file", file) if file?
       $.ajax
         url: "/pads"
         type: "POST"
-        data: data
+        data: formData
+        processData: false  # tell jQuery not to process the data used because of file upload.
+        contentType: false   # tell jQuery not to set contentType used because of file upload.
         success: (data) ->
+          $("#passwordModal").modal("hide")
           $.ajax
             url: "/link/#{data.hash_id}"
             success: (linkHtml) ->
@@ -44,5 +50,17 @@ class Create
         error: (data) ->
           console.log("ERROR: #{data}")
     )
+  
+  @uploadFile = (file) ->
+    return unless file?
+    formData = new FormData()
+    formData.append("file", file)
+    $.ajax({
+      url: "/upload"
+      type: "POST"
+      data: formData
+      processData: false  # tell jQuery not to process the data
+      contentType: false   # tell jQuery not to set contentType
+    });
 
 $(document).ready(=> Create.init() )

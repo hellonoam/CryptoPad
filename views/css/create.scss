@@ -1,4 +1,10 @@
 .main {
+  #filesButton {
+    opacity: 0;
+    z-index: 1000;
+    position: absolute;
+    width: 119px;
+  }
   textarea {
     width: 450px;
     height: 300px;

@@ -6,6 +6,7 @@ require File.join(Dir.pwd, "models", "user")
 require "coffee-script"
 require "sass"
 require "json"
+require "fileutils"
 
 class PadApp < Sinatra::Base
 
@@ -75,6 +76,13 @@ class PadApp < Sinatra::Base
   post "/pads" do
     pad = Pad.new(params)
     pad.save
+    if params[:file]
+      file_params = params[:file]
+      new_path = "/tmp/#{file_params[:filename]}"
+      puts "  Received file size for #{file_params[:filename]}: #{File.size(file_params[:tempfile].path)}"
+      puts "  Path: #{file_params[:tempfile].path}"
+      FileUtils.mv(file_params[:tempfile].path, new_path)
+    end
     content_type "application/json"
     { :hash_id => pad.hash_id.to_s }.to_json
   end
