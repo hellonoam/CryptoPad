@@ -1,5 +1,5 @@
 class window.Create
-  @client_side = false
+  @client_side_encryption = false
 
   @init = ->
     $("#securityButton").tooltip({ title: "private beta" })
@@ -30,7 +30,7 @@ class window.Create
       return Common.showErrorTooltip($("#password"), "choose a better password") if nakedPass is ""
       pass = Crypto.PBKDF2(nakedPass, true)
       formData = new FormData()
-      if @client_side
+      if @client_side_encryption
         # TODO: make this random.
         salt = "salty"
         cryptedHash = JSON.parse(Crypto.encrypt(text, nakedPass, salt))
