@@ -1,2 +1,3 @@
 .sass-cache
 db/dev.sqlite
+file_transfers/*
