@@ -81,6 +81,7 @@ class PadApp < Sinatra::Base
 
   get "/pads/:hash_id/files/:filename" do
     redirect "/pads/#{params[:hash_id]}" if session[:hash_id] != params[:hash_id] || session[:hash_id].nil?
+    # TODO: decrypt file
     send_file "#{settings.root}/file_transfers/#{params[:hash_id]}/#{params[:filename]}"
   end
 
@@ -97,6 +98,7 @@ class PadApp < Sinatra::Base
       new_path = "#{pad_dir}/#{file_params[:filename]}"
       puts "  Received file size for #{file_params[:filename]}: #{File.size(file_params[:tempfile].path)}"
       FileUtils.mkdir(pad_dir) unless File.exist?(pad_dir)
+      # TODO: encrypt file
       FileUtils.mv(file_params[:tempfile].path, new_path)
       PadFile.new( :pad_id => pad.id, :filename => file_params[:filename] ).save
     end
