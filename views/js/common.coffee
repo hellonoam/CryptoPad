@@ -27,6 +27,7 @@ class window.Common
     element.tooltip("show")
     setTimeout((-> element.tooltip("hide")), 2000)
 
+  # TODO: avoid XSS
   @htmlForLinks = (filenames, title, withLinks) ->
     return "" if filenames?.length == 0
     html = "<p class='span4'>#{title}</p><div class='span4'>"
