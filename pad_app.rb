@@ -80,7 +80,7 @@ class PadApp < Sinatra::Base
   end
 
   get "/pads/:hash_id/files/:filename" do
-    halt 401, "unauthenticated request" if (session[:hash_id] != params[:hash_id]) || session[:hash_id].nil?
+    redirect "/pads/#{params[:hash_id]}" if session[:hash_id] != params[:hash_id] || session[:hash_id].nil?
     send_file "#{settings.root}/file_transfers/#{params[:hash_id]}/#{params[:filename]}"
   end
 
