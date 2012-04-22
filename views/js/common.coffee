@@ -33,8 +33,8 @@ class window.Common
     for filename in filenames
       link = if withLinks then "#{window.location.pathname}/files/#{filename}" else "#"
       html += "<div class='row'>" +
-                  "<a class='span1 offset1' href='#{link}'>" +
-                    "#{filename}" +
+                  "<a class='offset1' href='#{link}'>" +
+                    "#{if filename.length > 40 then filename.substr(0,37) + '...' else filename}" +
                   "</a>" +
                 "</div>"
     html += "</div>"
