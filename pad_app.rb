@@ -92,6 +92,7 @@ class PadApp < Sinatra::Base
     # Saving the files that were uploaded.
     (0...params[:filesCount].to_i).each do |i|
       file_params = params["file#{i}"]
+      next if File.size(file_params[:tempfile].path) > 10 * 1000 * 1000 # 10 MB
       pad_dir = "#{settings.root}/file_transfers/#{pad.hash_id}"
       new_path = "#{pad_dir}/#{file_params[:filename]}"
       puts "  Received file size for #{file_params[:filename]}: #{File.size(file_params[:tempfile].path)}"
