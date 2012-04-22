@@ -27,4 +27,16 @@ class window.Common
     element.tooltip("show")
     setTimeout((-> element.tooltip("hide")), 2000)
 
+  @htmlForLinks = (filenames) ->
+    return "" if filenames?.length == 0
+    "<p class='span4'>You've got some files as well:</p><div class='span4'>"
+    for filename in filenames
+      links += "<div class='row'>" +
+                  "<a class='span1' href='#{window.location.pathname}/files/#{filename}'>" +
+                    "#{filename}" +
+                  "</a>" +
+                "</div>"
+    links += "</div>"
+    links
+
 $(document).ready(=> Common.init() )

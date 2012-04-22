@@ -13,6 +13,7 @@ class Pad
             $("textarea").val(data.text)
           else
             $("textarea").val(Crypto.decrypt(data.encrypted_text, nakedPass, data.salt, data.iv))
+          $(".fileslinks").html(Common.htmlForLinks(data.filenames))
           $("#passwordModal").modal("hide")
         error: (data) ->
           Common.showErrorTooltip($("#password"), "incorrect password")

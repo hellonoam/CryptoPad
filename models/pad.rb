@@ -2,6 +2,9 @@ require File.join(Dir.pwd, "lib", "crypto")
 require "json"
 
 class Pad < Sequel::Model
+
+  one_to_many :pad_files
+
   # Creates a new pad with the text and password.
   def initialize(params)
     args = Hash.new
@@ -22,9 +25,15 @@ class Pad < Sequel::Model
     # add validations
   end
 
+  def filenames
+    self.pad_files.map do |file|
+      file.filename.to_s
+    end
+  end
+
   def public_model
     { :salt => self.salt, :iv => self.iv, :encrypted_text => self.encrypted_text,
-      :encrypt_method => self.encrypt_method }
+      :encrypt_method => self.encrypt_method, :filenames => self.filenames }
   end
 
   def correct_pass?(password)

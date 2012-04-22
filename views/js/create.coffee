@@ -33,14 +33,17 @@ class window.Create
       else
         formData.append("password", pass)
         formData.append("text", text)
-      file = $("input[type=file]")[0].files[0]
-      formData.append("file", file) if file?
+      fileList = $("input[type=file]")[0].files
+      formData.append("filesCount", fileList.length)
+      i = 0
+      for file in fileList
+        formData.append("file#{i++}", file)
       $.ajax
         url: "/pads"
         type: "POST"
         data: formData
         processData: false  # tell jQuery not to process the data used because of file upload.
-        contentType: false   # tell jQuery not to set contentType used because of file upload.
+        contentType: false  # tell jQuery not to set contentType used because of file upload.
         success: (data) ->
           $("#passwordModal").modal("hide")
           $.ajax
