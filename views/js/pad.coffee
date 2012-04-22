@@ -1,5 +1,6 @@
 class Pad
   @init = ->
+    $("textarea").val("")
     $("#passwordModal #password").keypress( (event) -> $("#passwordDone").click() if event.keyCode is 13 )
     $("#passwordModal").modal({keyboard: false})
     $("#passwordDone").click(->
