@@ -27,16 +27,17 @@ class window.Common
     element.tooltip("show")
     setTimeout((-> element.tooltip("hide")), 2000)
 
-  @htmlForLinks = (filenames) ->
+  @htmlForLinks = (filenames, title, withLinks) ->
     return "" if filenames?.length == 0
-    "<p class='span4'>You've got some files as well:</p><div class='span4'>"
+    html = "<p class='span4'>#{title}</p><div class='span4'>"
     for filename in filenames
-      links += "<div class='row'>" +
-                  "<a class='span1' href='#{window.location.pathname}/files/#{filename}'>" +
+      link = if withLinks then "#{window.location.pathname}/files/#{filename}" else "#"
+      html += "<div class='row'>" +
+                  "<a class='span1 offset1' href='#{link}'>" +
                     "#{filename}" +
                   "</a>" +
                 "</div>"
-    links += "</div>"
-    links
+    html += "</div>"
+    html
 
 $(document).ready(=> Common.init() )

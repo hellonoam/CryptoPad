@@ -6,17 +6,26 @@ class window.Create
 
     # launching the password dialog.
     $("#submitPad").click(=>
-      # @uploadFile($("input[type=file]")[0].files[0])
-      return Common.showErrorTooltip($("textarea"), "textarea is empty") if $("textarea").val() is ""
+      if $("textarea").val() is "" and $("input[type=file]")[0].files.length is 0
+        return Common.showErrorTooltip($("textarea"), "textarea is empty")
       $("#passwordModal").modal()
     )
 
     # mapping enter to clicking done.
     $("#passwordModal #password").keypress( (event) -> $("#passwordDone").click() if event.keyCode is 13 )
 
+    # rendering the file names after files have been selected
+    $("input[type=file]").change(->
+      filenames = []
+      for file in this.files
+        filenames.push file.name
+      $(".fileslinks").html(Common.htmlForLinks(filenames, "files:", false))
+    )
+
     # sending the pad to the server.
     $("#passwordDone").click(=>
       text = $("textarea").val()
+      text = " " if text is "" # gets rid of server error when encrypting an empty string
       nakedPass = $("#password").val()
       return Common.showErrorTooltip($("#password"), "choose a better password") if nakedPass is ""
       pass = Crypto.PBKDF2(nakedPass, true)
