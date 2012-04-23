@@ -31,8 +31,8 @@ class window.Create
       pass = Crypto.PBKDF2(nakedPass, true)
       formData = new FormData()
       if @client_side_encryption
-        # TODO: make this random.
-        salt = "salty"
+        # TODO: make this more random.
+        salt = "#{Math.round(Math.random()*10000)}"
         cryptedHash = JSON.parse(Crypto.encrypt(text, nakedPass, salt))
         formData.append("password", pass)
         formData.append("salt", salt)
