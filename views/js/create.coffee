@@ -47,14 +47,27 @@ class window.Create
       i = 0
       for file in fileList
         formData.append("file#{i++}", file)
+      # hiding the dialog
+      $("#passwordModal").modal("hide")
       $.ajax
+        xhr: ->
+          $(".status p").html("Your pad is uploading")
+          $(".status .progress").removeClass("hide")
+          xhr = new XMLHttpRequest()
+          xhr.upload.addEventListener("progress", (event) ->
+            if (event.lengthComputable)
+              percentComplete = Math.round((event.loaded / event.total) * 100)
+              $(".status .progress .bar").width("#{percentComplete}%")
+              $(".status h4").html("#{percentComplete}%")
+              console.log "#{percentComplete}%"
+          )
+          return xhr
         url: "/pads"
         type: "POST"
         data: formData
         processData: false  # tell jQuery not to process the data used because of file upload.
         contentType: false  # tell jQuery not to set contentType used because of file upload.
         success: (data) ->
-          $("#passwordModal").modal("hide")
           $.ajax
             url: "/link/#{data.hash_id}"
             success: (linkHtml) ->
