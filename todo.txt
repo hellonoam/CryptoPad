@@ -1,0 +1,29 @@
+- UI work
+ - fix links
+ 
+- uploading pipeline
+ - remove some of the selected files
+ - feedback if files is over the size limit
+ - move to S3
+ - do encryption / decryption of files
+ - investigate client side encryption of files
+ - integration tests
+
+- generate random password upon request
+
+- client-side encryption
+ - investigate using some of the cryptoCat JS crypto
+
+- protect against brute force attacks
+ - exponential backoff
+ - perhaps delete the pad after multiple attempts
+
+- more security options
+  - let user choose client/server side encryption
+  - when to delete
+   - after X people read it
+   - after X days
+   - after multiple failed attempts
+
+- share button
+ - after the user created the pad allow to share directly from the site 
