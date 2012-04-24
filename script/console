@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
 require "irb"
+require File.join(Dir.pwd, "lib", "db")
+require File.join(Dir.pwd, "models", "pad")
+require File.join(Dir.pwd, "models", "user")
+require File.join(Dir.pwd, "models", "pad_file")
 
 IRB.start
