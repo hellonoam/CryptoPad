@@ -2,13 +2,14 @@
  - fix links
  
 - uploading pipeline
- - remove some of the selected files
+ - ability to remove some of the selected files
  - feedback if files is over the size limit (noam)
  - move to S3
  - do encryption / decryption of files (noam)
  - investigate client side encryption of files
  - investigate slow upload
  - integration tests (noam)
+ - make sure deleting pad deletes files in db and in reality
 
 - generate random password upon request
 
@@ -21,6 +22,7 @@
 
 - more security options
   - let user choose client/server side encryption
+  - add option for no password
   - when to delete
    - after X people read it
    - after X days
