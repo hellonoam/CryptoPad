@@ -68,6 +68,7 @@ describe "The Pad App" do
       # Checking retrieving redirects
       last_response = @conn.get "/pads/#{hash_id}/files/#{@filename}"
       last_response.status.should == 302
+      URI.parse(last_response.headers["location"]).path.should == "/pads/#{hash_id}"
 
       # Deletes the pad and the file
       Pad[:hash_id => hash_id].destroy
