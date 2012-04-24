@@ -25,6 +25,11 @@ class Pad < Sequel::Model
     # add validations
   end
 
+  # TODO: find out why dependency delete doesn't work
+  def before_destroy
+    self.pad_files.each { |f| f.destroy }
+  end
+
   def filenames
     self.pad_files.map do |file|
       file.filename.to_s
