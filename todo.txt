@@ -3,11 +3,12 @@
  
 - uploading pipeline
  - remove some of the selected files
- - feedback if files is over the size limit
+ - feedback if files is over the size limit (noam)
  - move to S3
- - do encryption / decryption of files
+ - do encryption / decryption of files (noam)
  - investigate client side encryption of files
- - integration tests
+ - investigate slow upload
+ - integration tests (noam)
 
 - generate random password upon request
 
