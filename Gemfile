@@ -6,6 +6,7 @@ gem "rake"
 gem "sequel"
 gem "coffee-script"
 gem "sass"
+gem "mime-types"
 
 group :development, :test do
   gem "pry"

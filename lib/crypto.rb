@@ -12,9 +12,48 @@ module Crypto
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.encrypt
     aes.key = key
-    iv ||= Base64.strict_encode64(aes.random_iv)
+    iv = Base64.strict_encode64(aes.random_iv)
     aes.iv = iv
     [Base64.strict_encode64(aes.update(plain_text) + aes.final), iv]
+  end
+
+  def self.encrypt_file(old_file_path, new_file_path, password, salt)
+    key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 2000, 256)
+    aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
+    aes.encrypt
+    aes.key = key
+    iv = Base64.strict_encode64(aes.random_iv)
+    aes.iv = iv
+    decrypted_file = File.open(old_file_path)
+    File.open(new_file_path, "w") do |f|
+      loop do
+        decrypted_buffer = decrypted_file.read(4096)
+        break unless decrypted_buffer
+        crypted_buffer = aes.update(decrypted_buffer)
+        f << crypted_buffer
+      end
+      f << aes.final
+    end
+    iv
+  end
+
+  def self.decrypt_file(file_path, password, salt, iv)
+    key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, salt, 2000, 256)
+    aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
+    aes.decrypt
+    aes.key = key
+    aes.iv = iv
+    data = ""
+    File.open(file_path, "r") do |f|
+      loop do
+        crypted_buffer = f.read(4096)
+        break unless crypted_buffer
+        decrypted_buffer = aes.update(crypted_buffer)
+        data << decrypted_buffer
+      end
+      data << aes.final
+    end
+    data
   end
 
   # Decrypts

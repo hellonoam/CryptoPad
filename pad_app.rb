@@ -7,7 +7,7 @@ require File.join(Dir.pwd, "models", "pad_file")
 require "coffee-script"
 require "sass"
 require "json"
-require "fileutils"
+require "mime/types"
 
 class PadApp < Sinatra::Base
 
@@ -81,8 +81,14 @@ class PadApp < Sinatra::Base
 
   get "/pads/:hash_id/files/:filename" do
     redirect "/pads/#{params[:hash_id]}" if session[:hash_id] != params[:hash_id] || session[:hash_id].nil?
-    # TODO: decrypt file
-    send_file "#{settings.root}/file_transfers/#{params[:hash_id]}/#{params[:filename]}"
+    pad = Pad[:hash_id => params[:hash_id]]
+    pad_file = PadFile[:pad_id => pad.id, :filename => params[:filename]]
+    # Silly Chrome cancels the request if it's application/octet-stream
+    # So the type is determined by the extension if that fails it's set to text which seems to be successful
+    # most of the time but not always. a PDF will fail when trying to download as text/plain
+    content_type (MIME::Types.type_for(params[:filename]).first || "text/plain").to_s
+    pad_file.get_decrypted_file(session[:password])
+    # send_file pad_file.get_decrypted_file(session[:password])
   end
 
   # Creates a new pad and returns the hash_id
@@ -98,9 +104,10 @@ class PadApp < Sinatra::Base
       new_path = "#{pad_dir}/#{file_params[:filename]}"
       puts "  Received file size for #{file_params[:filename]}: #{File.size(file_params[:tempfile].path)}"
       FileUtils.mkdir(pad_dir) unless File.exist?(pad_dir)
-      # TODO: encrypt file
-      FileUtils.mv(file_params[:tempfile].path, new_path)
-      PadFile.new( :pad_id => pad.id, :filename => file_params[:filename] ).save
+
+      # FileUtils.mv(file_params[:tempfile].path, new_path)
+      PadFile.new( :pad_id => pad.id, :filename => file_params[:filename], :password => params[:password],
+                   :temp_file_path => file_params[:tempfile].path, :new_file_path => new_path ).save
     end
 
     content_type "application/json"
