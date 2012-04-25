@@ -1,5 +1,7 @@
 class window.Create
   @client_side_encryption = false
+  @FILELIMIT = 20*1000*1000 # 20MB
+  @fileList = []
 
   @init = ->
     $("#securityButton").tooltip({ title: "private beta" })
@@ -15,11 +17,17 @@ class window.Create
     $("#passwordModal #password").keypress( (event) -> $("#passwordDone").click() if event.keyCode is 13 )
 
     # rendering the file names after files have been selected
-    $("input[type=file]").change(->
+    $("input[type=file]").change(=>
       filenames = []
-      for file in this.files
+      overLimit = false
+      for file in $("input[type=file]")[0].files
         filenames.push file.name
-      $(".fileslinks").html(Common.htmlForLinks(filenames, "files:", false))
+        if file.size <= @FILELIMIT
+          @fileList.push file
+        else
+          overLimit = true
+      $(".fileslinks").html(Common.htmlForLinks(filenames, "files:", false)) if @fileList.length > 0
+      $(".fileslinks").append("<p>overlimit</p>") if overLimit
     )
 
     # sending the pad to the server.
@@ -42,10 +50,9 @@ class window.Create
       else
         formData.append("password", pass)
         formData.append("text", text)
-      fileList = $("input[type=file]")[0].files
-      formData.append("filesCount", fileList.length)
+      formData.append("filesCount", @fileList.length)
       i = 0
-      for file in fileList
+      for file in @fileList
         formData.append("file#{i++}", file)
       # hiding the dialog
       $("#passwordModal").modal("hide")
