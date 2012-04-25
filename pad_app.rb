@@ -88,7 +88,6 @@ class PadApp < Sinatra::Base
     # most of the time but not always. a PDF will fail when trying to download as text/plain
     content_type (MIME::Types.type_for(params[:filename]).first || "text/plain").to_s
     pad_file.get_decrypted_file(session[:password])
-    # send_file pad_file.get_decrypted_file(session[:password])
   end
 
   # Creates a new pad and returns the hash_id
