@@ -18,16 +18,13 @@ class window.Create
 
     # rendering the file names after files have been selected
     $("input[type=file]").change(=>
-      filenames = []
-      overLimit = false
+      @overLimit = false
       for file in $("input[type=file]")[0].files
-        filenames.push file.name
         if file.size <= @FILELIMIT
           @fileList.push file
         else
-          overLimit = true
-      $(".fileslinks").html(Common.htmlForLinks(filenames, "files:", false)) if @fileList.length > 0
-      $(".fileslinks").append("<p>overlimit</p>") if overLimit
+          @overLimit = true
+        @renderFiles()
     )
 
     # sending the pad to the server.
@@ -82,17 +79,11 @@ class window.Create
         error: (data) ->
           console.log("ERROR: #{data}")
     )
-  
-  @uploadFile = (file) ->
-    return unless file?
-    formData = new FormData()
-    formData.append("file", file)
-    $.ajax({
-      url: "/upload"
-      type: "POST"
-      data: formData
-      processData: false  # tell jQuery not to process the data
-      contentType: false   # tell jQuery not to set contentType
-    });
+
+  @renderFiles = =>
+    $(".fileslinks").html(Common.htmlForLinks(@fileList.map((file) -> file.name), "files:", false))
+    if @overLimit
+      $(".overlimitMessage").fadeIn("slow")
+      $(".overlimitMessage .close").click(-> $(".overlimitMessage").fadeOut("slow"))
 
 $(document).ready(=> Create.init() )

@@ -13,11 +13,21 @@
         <input type="button" id="filesButtonOverlay" class="btn btn-info" value="Add Files to Pad">
         <input type="button" id="securityButton"class="btn btn-info disabled" value="More Securiry Options">
       </div>
+    </div>
+    <div class="row">
       <div class="fileslinks"></div>
-      <textarea autofocus placeholder="your secret message" class="input-xlarge"></textarea>
-      <div>
-        <input type="button" id="submitPad" class="btn btn-warning" value="submit">
+    </div>
+    <div class="row">
+      <div class="overlimitMessage alert alert-error hide">
+        <a href="#" class="close">×</a>
+        You chose a file over the 20MB limit, it will not be uploaded
       </div>
+    </div>
+    <div class="row">
+      <textarea autofocus placeholder="your secret message" class="input-xlarge"></textarea>
+    </div>
+    <div class="row">
+      <input type="button" id="submitPad" class="btn btn-warning" value="submit">
     </div>
   </div>
   <div class="span3 points">
