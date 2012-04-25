@@ -3,8 +3,8 @@
  - show click on file upload
 
 - uploading pipeline
- - ability to remove some of the selected files (noam)
- - feedback if files is over the size limit (noam)
+ done - ability to remove some of the selected files (noam)
+ done - feedback if files is over the size limit (noam)
  - move to S3
  done - do encryption / decryption of files (noam)
  - investigate client side encryption of files
@@ -24,10 +24,12 @@
 - more security options
   - let user choose client/server side encryption
   - add option for no password
+  - add option for 'allow reader to destory?'
   - when to delete
    - after X people read it
    - after X days
    - after multiple failed attempts
+   - never
 
 - share button
  - after the user created the pad allow to share directly from the site 
