@@ -1,15 +1,16 @@
 - UI work
  - fix links
- 
+ - show click on file upload
+
 - uploading pipeline
- - ability to remove some of the selected files
+ - ability to remove some of the selected files (noam)
  - feedback if files is over the size limit (noam)
  - move to S3
- - do encryption / decryption of files (noam)
+ done - do encryption / decryption of files (noam)
  - investigate client side encryption of files
  - investigate slow upload
- - integration tests (noam)
- - make sure deleting pad deletes files in db and in reality
+ done - integration tests (noam)
+ done - make sure deleting pad deletes files in db and in reality (noam)
 
 - generate random password upon request
 
