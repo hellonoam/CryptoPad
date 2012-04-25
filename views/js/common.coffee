@@ -33,8 +33,9 @@ class window.Common
     html = "<p class='span4'>#{title}</p><div class='span4'>"
     for filename in filenames
       link = if withLinks then "#{window.location.pathname}/files/#{filename}" else "#"
+      target = if withLinks then "target='_blank'" else ""
       html += "<div class='row'>" +
-                  "<a class='offset1' href='#{link}'>" +
+                  "<a class='offset1' href='#{link}' #{target}>" +
                     "#{if filename.length > 40 then filename.substr(0,37) + '...' else filename}" +
                   "</a>" +
                 "</div>"
