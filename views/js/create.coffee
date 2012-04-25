@@ -1,6 +1,7 @@
 class window.Create
   @client_side_encryption = false
-  @FILELIMIT = 20*1000*1000 # 20MB
+  @FILESIZELIMIT = 20*1000*1000 # 20MB
+  @FILECOUNTLIMIT = 4
   @fileList = []
 
   @init = ->
@@ -18,13 +19,16 @@ class window.Create
 
     # rendering the file names after files have been selected
     $("input[type=file]").change(=>
-      @overLimit = false
+      @overSizeLimit = false
+      @overCountLimit = false
       for file in $("input[type=file]")[0].files
-        if file.size <= @FILELIMIT
+        if file.size > @FILESIZELIMIT
+          @overSizeLimit = true
+        if @fileList.length >= @FILECOUNTLIMIT
+          @overCountLimit = true
+        if file.size <= @FILESIZELIMIT and @fileList.length < @FILECOUNTLIMIT
           @fileList.push file
-        else
-          @overLimit = true
-        @renderFiles()
+      @renderFiles()
     )
 
     # sending the pad to the server.
@@ -80,10 +84,14 @@ class window.Create
           console.log("ERROR: #{data}")
     )
 
+  # Renders the filelist with appropriate warning messages if needed on the page.
   @renderFiles = =>
+    if @overSizeLimit
+      $(".overSizeLimitMessage").fadeIn("slow")
+      $(".overSizeLimitMessage .close").click(-> $(".overSizeLimitMessage").fadeOut("slow"))
+    if @overCountLimit
+      $(".overCountLimitMessage").fadeIn("slow")
+      $(".overCountLimitMessage .close").click(-> $(".overCountLimitMessage").fadeOut("slow"))
     $(".fileslinks").html(Common.htmlForLinks(@fileList.map((file) -> file.name), "files:", false))
-    if @overLimit
-      $(".overlimitMessage").fadeIn("slow")
-      $(".overlimitMessage .close").click(-> $(".overlimitMessage").fadeOut("slow"))
 
 $(document).ready(=> Create.init() )
