@@ -95,6 +95,8 @@ class window.Create
     $(".fileslinks").html(Common.htmlForLinks(@fileList.map((file) -> file.name), "files:", false))
     $(".fileslinks .row").prepend("<a class='close' href='#'>x</a>")
     $(".fileslinks .row .close").click(->
+      Create.overSizeLimit = false
+      Create.overCountLimit = false
       filename = $(this).parent().find("a.filelink").html()
       Create.fileList = Create.fileList.filter((file) -> return file.name isnt filename)
       Create.renderFiles()
