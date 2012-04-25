@@ -15,6 +15,9 @@ class PadApp < Sinatra::Base
   enable :sessions
   enable :logging
 
+  FILE_SIZE_LIMIT = 20 * 1000 * 1000 # 20 MB
+  FILE_COUNT_LIMIT = 4
+
   def initialize
     super
     puts do_cron_job
@@ -96,15 +99,14 @@ class PadApp < Sinatra::Base
     pad.save
 
     # Saving the files that were uploaded.
-    (0...params[:filesCount].to_i).each do |i|
+    (0...[params[:filesCount].to_i, FILE_COUNT_LIMIT].min).each do |i|
       file_params = params["file#{i}"]
-      next if File.size(file_params[:tempfile].path) > 10 * 1000 * 1000 # 10 MB
+      next if File.size(file_params[:tempfile].path) > FILE_SIZE_LIMIT
       pad_dir = "#{settings.root}/file_transfers/#{pad.hash_id}"
       new_path = "#{pad_dir}/#{file_params[:filename]}"
       puts "  Received file size for #{file_params[:filename]}: #{File.size(file_params[:tempfile].path)}"
       FileUtils.mkdir(pad_dir) unless File.exist?(pad_dir)
 
-      # FileUtils.mv(file_params[:tempfile].path, new_path)
       PadFile.new( :pad_id => pad.id, :filename => file_params[:filename], :password => params[:password],
                    :temp_file_path => file_params[:tempfile].path, :new_file_path => new_path ).save
     end

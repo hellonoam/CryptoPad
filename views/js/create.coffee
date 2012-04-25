@@ -85,6 +85,7 @@ class window.Create
     )
 
   # Renders the filelist with appropriate warning messages if needed on the page.
+  # Also adds an X which removes the file from the list.
   @renderFiles = =>
     if @overSizeLimit
       $(".overSizeLimitMessage").fadeIn("slow")
@@ -93,5 +94,11 @@ class window.Create
       $(".overCountLimitMessage").fadeIn("slow")
       $(".overCountLimitMessage .close").click(-> $(".overCountLimitMessage").fadeOut("slow"))
     $(".fileslinks").html(Common.htmlForLinks(@fileList.map((file) -> file.name), "files:", false))
+    $(".fileslinks .row").prepend("<a class='close' href='#'>x</a>")
+    $(".fileslinks .row .close").click(->
+      filename = $(this).parent().find("a.filelink").html()
+      Create.fileList = Create.fileList.filter((file) -> return file.name isnt filename)
+      Create.renderFiles()
+    )
 
 $(document).ready(=> Create.init() )

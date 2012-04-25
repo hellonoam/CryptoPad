@@ -35,7 +35,7 @@ class window.Common
       link = if withLinks then "#{window.location.pathname}/files/#{filename}" else "#"
       target = if withLinks then "target='_blank'" else ""
       html += "<div class='row'>" +
-                  "<a class='offset1' href='#{link}' #{target}>" +
+                  "<a class='filelink' href='#{link}' #{target}>" +
                     "#{if filename.length > 40 then filename.substr(0,37) + '...' else filename}" +
                   "</a>" +
                 "</div>"

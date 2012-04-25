@@ -5,6 +5,15 @@
     position: absolute;
     width: 119px;
   }
+  .fileslinks {
+    .close {
+      float: left;
+      line-height: 13px;
+    }
+    .filelink {
+      margin-left: 10px;
+    }
+  }
   .oversize {
     margin-right: 20px;
     margin-top: 10px;
