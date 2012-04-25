@@ -67,7 +67,6 @@ class window.Create
               percentComplete = Math.round((event.loaded / event.total) * 100)
               $(".status .progress .bar").width("#{percentComplete}%")
               $(".status h4").html("#{percentComplete}%")
-              console.log "#{percentComplete}%"
           )
           return xhr
         url: "/pads"
