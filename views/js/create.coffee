@@ -3,8 +3,17 @@ class window.Create
   @FILESIZELIMIT = 20*1000*1000 # 20MB
   @FILECOUNTLIMIT = 4
   @fileList = []
+  @securityOptions = {}
 
   @init = ->
+    # Updating the securityOptions hash with the latest info from the form.
+    $("form").change(=>
+      @securityOptions = $("form").serializeObject()
+      $("input[name=encryptMethod]").attr("disabled", @securityOptions.noEncryption?)
+      $("input[name=allowReaderDestroy], input[name=destroyAfterDays]," +
+        "input[name=destroyAfterMultipleFailed]").attr("disabled", @securityOptions.neverDestroy?)
+    )
+
     $("#securityButton").click(-> $(".securityOptions").toggle("slow"))
 
     # launching the password dialog.
@@ -101,5 +110,12 @@ class window.Create
       Create.fileList = Create.fileList.filter((file) -> return file.name isnt filename)
       Create.renderFiles()
     )
+
+$.fn.serializeObject = ->
+    hash = {};
+    a = this.serializeArray();
+    for object in a
+      hash[object.name] = if object.value is "on" then true else object.value
+    hash
 
 $(document).ready(=> Create.init() )
