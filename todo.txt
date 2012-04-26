@@ -21,7 +21,7 @@
  - exponential backoff
  - perhaps delete the pad after multiple attempts
 
-- more security options
+- more security options (noam)
   - let user choose client/server side encryption
   - add option for no password
   - add option for 'allow reader to destory?'
@@ -32,4 +32,9 @@
    - never
 
 - share button
- - after the user created the pad allow to share directly from the site 
+ - after the user created the pad allow to share directly from the site
+
+- premium
+ - see all pad links
+ - get notifications when someone reads the pad
+ - unlimited file sharing
