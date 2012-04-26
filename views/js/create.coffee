@@ -5,7 +5,7 @@ class window.Create
   @fileList = []
 
   @init = ->
-    $("#securityButton").tooltip({ title: "private beta" })
+    $("#securityButton").click(-> $(".securityOptions").toggle("slow"))
 
     # launching the password dialog.
     $("#submitPad").click(=>

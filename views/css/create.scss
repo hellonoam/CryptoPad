@@ -5,6 +5,13 @@
     position: absolute;
     width: 119px;
   }
+  .securityOptions {
+    margin-top: 20px;
+    margin-right: 20px;
+    .days {
+      width: 40px;
+    }
+  }
   .fileslinks {
     .close {
       float: left;

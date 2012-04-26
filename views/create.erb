@@ -11,7 +11,57 @@
       <div>
         <input type="file" id="filesButton" multiple>
         <input type="button" id="filesButtonOverlay" class="btn btn-info" value="Add Files to Pad">
-        <input type="button" id="securityButton"class="btn btn-info disabled" value="More Securiry Options">
+        <input type="button" id="securityButton"class="btn btn-info" value="More Securiry Options">
+      </div>
+    </div>
+    <div class="row">
+      <div class="securityOptions hide">
+        <form class="form-horizontal">
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label">Encryption method:</label>
+              <div class="controls">
+                <label class="checkbox">
+                  <input type="checkbox" name="no encryption"> Do not encrypt (no password)
+                </label>
+                <label class="radio">
+                  <input type="radio" name="encryptMethod" value="serverSide" checked> Server-Side
+                </label>
+                <label class="radio">
+                  <input type="radio" name="encryptMethod" value="clientSide"> Client-Side
+                </label>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Destruction option:</label>
+              <div class="controls">
+                <label class="checkbox">
+                  <input type="checkbox" name="neverDestroy"> Never destroy pad
+                </label>
+                <label class="checkbox">
+                  <input type="checkbox" name="allowReaderDestroy"> Allow reader to destroy pad
+                </label>
+                <label class="select">
+                  Destroy after
+                  <select name="destroyAfterDays" class="days">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option selected>7</option>
+                  </select>
+                  days
+                </label>
+                <label class="checkbox">
+                  <input type="checkbox" checked name="destroyAfterMultipleFailed">
+                  Destroy after multiple failed attempts to authenticate
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
     <div class="row">
