@@ -13,7 +13,7 @@ class window.Common
         data:
           email: email
         success: ->
-          setTimeout((=> $("#signupModal").modal("hide")), 2000)
+          setTimeout((-> $("#signupModal").modal("hide")), 2000)
           $(".modal-body").html("Thanks!")
           $("#signupModal #signup").attr("disabled", "true")
         error: (data) ->
