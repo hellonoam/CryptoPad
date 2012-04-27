@@ -8,9 +8,10 @@ class window.Create
     # Updating the securityOptions hash with the latest info from the form.
     $("form").change(=>
       @securityOptions = $("form").serializeObject()
-      $("input[name=encryptMethod]").attr("disabled", @securityOptions.noEncryption?)
-      $("input[name=allowReaderDestroy], input[name=destroyAfterDays]," +
-        "input[name=destroyAfterMultipleFailed], select").attr("disabled", @securityOptions.neverDestroy?)
+      $("input[name=encryptMethod]").attr("disabled", @securityOptions.noPassword?)
+      $("input[name=allowToReaderDestroy], input[name=destroyAfterDays]," +
+        "input[name=destroyAfterMultipleFailedAttempts]," +
+        "select").attr("disabled", @securityOptions.neverDestroy?)
     )
     # Triggering change so the securityOptions will hold the default valued.
     $("form").change()
