@@ -8,10 +8,11 @@ class PadSecurityOption < Sequel::Model
 
     # For now setting die time to a year from now if never destroy was selected.
     params[:destroy_after_days] = 365 if params[:never_destroy]
+    params[:die_time] = Time.now + 3600 * 24 * (params[:destroy_after_days] || 7)
 
     # Whitelisting certain fields.
     params.select! do |k, v|
-      [:pad_id, :destroy_after_days, :destroy_after_multiple_failed_attempts, :no_password,
+      [:pad_id, :die_time, :destroy_after_multiple_failed_attempts, :no_password,
        :allow_reader_to_destroy].index(k)
     end
 
