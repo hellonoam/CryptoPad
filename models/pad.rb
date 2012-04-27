@@ -4,13 +4,14 @@ require "json"
 class Pad < Sequel::Model
 
   one_to_many :pad_files
+  one_to_one :pad_security_option
 
   # Creates a new pad with the text and password.
   def initialize(params)
     args = Hash.new
-    [:encrypt_method, :encrypted_text, :iv, :salt].each { |sym| args[sym] = params[sym]}
+    [:encrypted_text, :iv, :salt, :encrypt_method].each { |sym| args[sym] = params[sym]}
     args[:hash_id] = Crypto.generate_hash_id
-    args[:die_time] = Time.now + 3600 * 24 * 7 # 7 days from now
+    args[:created_at] = Time.now
     args[:salt] ||= Crypto.generate_salt
     args[:hashed_password] = Crypto.hash_password(params[:password], args[:salt])
     unless args[:encrypt_method] == "client_side"
@@ -22,12 +23,13 @@ class Pad < Sequel::Model
 
   def validate
     super
-    # add validations
+    # TODO: add validations
   end
 
   # TODO: find out why dependency delete doesn't work
   def before_destroy
     self.pad_files.each { |f| f.destroy }
+    self.pad_security_option.destroy
   end
 
   def filenames

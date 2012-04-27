@@ -1,5 +1,4 @@
 class window.Create
-  @client_side_encryption = false
   @FILESIZELIMIT = 20*1000*1000 # 20MB
   @FILECOUNTLIMIT = 4
   @fileList = []
@@ -11,8 +10,10 @@ class window.Create
       @securityOptions = $("form").serializeObject()
       $("input[name=encryptMethod]").attr("disabled", @securityOptions.noEncryption?)
       $("input[name=allowReaderDestroy], input[name=destroyAfterDays]," +
-        "input[name=destroyAfterMultipleFailed]").attr("disabled", @securityOptions.neverDestroy?)
+        "input[name=destroyAfterMultipleFailed], select").attr("disabled", @securityOptions.neverDestroy?)
     )
+    # Triggering change so the securityOptions will hold the default valued.
+    $("form").change()
 
     $("#securityButton").click(-> $(".securityOptions").toggle("slow"))
 
@@ -48,7 +49,7 @@ class window.Create
       return Common.showErrorTooltip($("#password"), "choose a better password") if nakedPass is ""
       pass = Crypto.PBKDF2(nakedPass, true)
       formData = new FormData()
-      if @client_side_encryption
+      if @securityOptions.encryptionMethod is "clientSide"
         # TODO: make this more random.
         salt = "#{Math.round(Math.random()*10000)}"
         cryptedHash = JSON.parse(Crypto.encrypt(text, nakedPass, salt))
@@ -60,12 +61,15 @@ class window.Create
       else
         formData.append("password", pass)
         formData.append("text", text)
-      formData.append("filesCount", @fileList.length)
+      # Appending security options.
+      formData.append("securityOptions", JSON.stringify(@securityOptions))
       i = 0
       for file in @fileList
         formData.append("file#{i++}", file)
       # hiding the dialog
       $("#passwordModal").modal("hide")
+      # Disabling all buttons
+      $("input, select, textarea").attr("disabled", true)
       $.ajax
         xhr: ->
           $(".status p").html("Your pad is uploading")
@@ -113,8 +117,7 @@ class window.Create
 
 $.fn.serializeObject = ->
     hash = {};
-    a = this.serializeArray();
-    for object in a
+    for object in this.serializeArray()
       hash[object.name] = if object.value is "on" then true else object.value
     hash
 

@@ -3,9 +3,11 @@ require "rspec"
 require "rack/test"
 require "json"
 require File.join(Dir.pwd, "lib", "db")
-require File.join(Dir.pwd, "models", "pad")
-require File.join(Dir.pwd, "models", "pad_file")
+require File.join(Dir.pwd, "models", "all")
 require "net/http"
+
+# add tests to check file limit
+# add tests to see if client side encryption works
 
 describe "The Pad App" do
 
@@ -81,8 +83,7 @@ describe "The Pad App" do
 
   def create_pad_with_file(text, password)
     file_to_send = Faraday::UploadIO.new(@filename, "application/form-data")
-    last_response = @conn.post "/pads", { :text => text, :password => password, :filesCount => 1,
-      :file0 => file_to_send }
+    last_response = @conn.post "/pads", { :text => text, :password => password, :file0 => file_to_send }
     last_response.status.should == 200
     JSON.parse(last_response.body)["hash_id"]
   end

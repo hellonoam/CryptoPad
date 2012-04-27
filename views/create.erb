@@ -22,7 +22,7 @@
               <label class="control-label">Encryption method:</label>
               <div class="controls">
                 <label class="checkbox">
-                  <input type="checkbox" name="noEncryption"> Do not encrypt
+                  <input type="checkbox" name="noPassword"> Do not encrypt (no password)
                 </label>
                 <label class="radio">
                   <input type="radio" name="encryptMethod" value="serverSide" checked> Server-Side
@@ -39,7 +39,7 @@
                   <input type="checkbox" name="neverDestroy"> Never destroy pad
                 </label>
                 <label class="checkbox">
-                  <input type="checkbox" name="allowReaderDestroy"> Allow reader to destroy pad
+                  <input type="checkbox" name="allowReaderToDestroy"> Allow reader to destroy pad
                 </label>
                 <label class="select">
                   Destroy after
@@ -55,7 +55,7 @@
                   days
                 </label>
                 <label class="checkbox">
-                  <input type="checkbox" checked name="destroyAfterMultipleFailed">
+                  <input type="checkbox" checked name="destroyAfterMultipleFailedAttempts">
                   Destroy after multiple failed attempts to authenticate
                 </label>
               </div>

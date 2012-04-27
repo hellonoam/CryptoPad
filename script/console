@@ -2,8 +2,6 @@
 
 require "irb"
 require File.join(Dir.pwd, "lib", "db")
-require File.join(Dir.pwd, "models", "pad")
-require File.join(Dir.pwd, "models", "user")
-require File.join(Dir.pwd, "models", "pad_file")
+require File.join(Dir.pwd, "models", "all")
 
 IRB.start

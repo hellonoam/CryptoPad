@@ -1,9 +1,7 @@
 require "sinatra/base"
 require "set"
 require File.join(Dir.pwd, "lib", "db")
-require File.join(Dir.pwd, "models", "pad")
-require File.join(Dir.pwd, "models", "user")
-require File.join(Dir.pwd, "models", "pad_file")
+require File.join(Dir.pwd, "models", "all")
 require "coffee-script"
 require "sass"
 require "json"
@@ -98,10 +96,16 @@ class PadApp < Sinatra::Base
     pad = Pad.new(params)
     pad.save
 
+    PadSecurityOption.new(JSON.parse(params[:securityOptions] || "{}").merge( :pad_id => pad.id )).save
+
     # Saving the files that were uploaded.
-    (0...[params[:filesCount].to_i, FILE_COUNT_LIMIT].min).each do |i|
+    (0...FILE_COUNT_LIMIT).each do |i|
       file_params = params["file#{i}"]
-      next if File.size(file_params[:tempfile].path) > FILE_SIZE_LIMIT
+      break if file_params.nil?
+      if File.size(file_params[:tempfile].path) > FILE_SIZE_LIMIT
+        File.delete(file_params[:tempfile].path)
+        next
+      end
       pad_dir = "#{settings.root}/file_transfers/#{pad.hash_id}"
       new_path = "#{pad_dir}/#{file_params[:filename]}"
       puts "  Received file size for #{file_params[:filename]}: #{File.size(file_params[:tempfile].path)}"
