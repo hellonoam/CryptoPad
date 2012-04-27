@@ -9,7 +9,7 @@ class window.Create
     $("form").change(=>
       @securityOptions = $("form").serializeObject()
       $("input[name=encryptMethod]").attr("disabled", @securityOptions.noPassword?)
-      $("input[name=allowToReaderDestroy], input[name=destroyAfterDays]," +
+      $("input[name=allowReaderToDestroy], input[name=destroyAfterDays]," +
         "input[name=destroyAfterMultipleFailedAttempts]," +
         "select").attr("disabled", @securityOptions.neverDestroy?)
     )
