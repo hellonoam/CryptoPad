@@ -38,3 +38,5 @@
  - see all pad links
  - get notifications when someone reads the pad
  - unlimited file sharing
+ - destroy after sending
+ - edit after sending
