@@ -19,17 +19,17 @@
 
 - protect against brute force attacks
  - exponential backoff
- - perhaps delete the pad after multiple attempts
+ - delete the pad after multiple attempts if option is set
 
 - more security options (noam)
-  - let user choose client/server side encryption
-  - add option for no password
+  done - let user choose client/server side encryption
+  done - add option for no password
   - add option for 'allow reader to destory?'
   - when to delete
    - after X people read it
-   - after X days
-   - after multiple failed attempts
-   - never
+   done - after X days
+   done (option added not implemented) - after multiple failed attempts
+   donw - never
 
 - share button
  - after the user created the pad allow to share directly from the site
