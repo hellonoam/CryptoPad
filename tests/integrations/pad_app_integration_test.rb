@@ -6,8 +6,9 @@ require File.join(Dir.pwd, "lib", "db")
 require File.join(Dir.pwd, "models", "all")
 require "net/http"
 
-# add tests to check file limit
-# add tests to see if client side encryption works
+# TODO: add tests to check file limits
+# TODO: add tests to see if client side encryption works
+# TODO: add tests for no password
 
 describe "The Pad App" do
 
