@@ -8,6 +8,8 @@ class window.Create
     # Updating the securityOptions hash with the latest info from the form.
     $("form").change(=>
       @securityOptions = $("form").serializeObject()
+      if @securityOptions.noPassword
+        @securityOptions.encryptMethod = "serverSide"
       $("input[name=encryptMethod]").attr("disabled", @securityOptions.noPassword?)
       $("input[name=allowReaderToDestroy], input[name=destroyAfterDays]," +
         "input[name=destroyAfterMultipleFailedAttempts]," +
@@ -22,6 +24,8 @@ class window.Create
     $("#submitPad").click(=>
       if $("textarea").val() is "" and $("input[type=file]")[0].files.length is 0
         return Common.showErrorTooltip($("textarea"), "textarea is empty")
+      if @securityOptions.noPassword
+        return $("#passwordDone").click()
       $("#passwordModal").modal()
     )
 
@@ -47,7 +51,8 @@ class window.Create
       text = $("textarea").val()
       text = " " if text is "" # gets rid of server error when encrypting an empty string
       nakedPass = $("#password").val()
-      return Common.showErrorTooltip($("#password"), "choose a better password") if nakedPass is ""
+      if !@securityOptions.noPassword and (nakedPass is "" or nakedPass.length < 5)
+        return Common.showErrorTooltip($("#password"), "choose a better password")
       pass = Crypto.PBKDF2(nakedPass, true)
       formData = new FormData()
       if @securityOptions.encryptionMethod is "clientSide"

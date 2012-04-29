@@ -43,8 +43,10 @@ class Pad < Sequel::Model
       :encrypt_method => self.encrypt_method, :filenames => self.filenames }
   end
 
+  # Verifies if the password is correct for this pad, if the pad doesn't request a password (set in
+  # pad_security_option) then any password will return true.
   def correct_pass?(password)
-    Crypto.hash_password(password, self.salt) == self.hashed_password
+    self.pad_security_option.no_password || Crypto.hash_password(password, self.salt) == self.hashed_password
   end
 
   def decrypt_text(password)

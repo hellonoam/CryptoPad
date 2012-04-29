@@ -1,8 +1,9 @@
 class Pad
   @init = ->
     $("textarea").val("")
+
     $("#passwordModal #password").keypress( (event) -> $("#passwordDone").click() if event.keyCode is 13 )
-    $("#passwordModal").modal({keyboard: false})
+
     $("#passwordDone").click(->
       nakedPass = $("#password").val()
       $.ajax
@@ -19,5 +20,11 @@ class Pad
         error: (data) ->
           Common.showErrorTooltip($("#password"), "incorrect password")
     )
+
+    # The password dialog is launched only if the pad needs a password
+    if $("#passwordModal").attr("data-noPassword") == "true"
+      $("#passwordDone").click()
+    else
+      $("#passwordModal").modal({keyboard: false})
 
 $(document).ready(=> Pad.init() )

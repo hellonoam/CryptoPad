@@ -48,7 +48,7 @@ class PadApp < Sinatra::Base
   end
 
   get "/create" do
-    render_with_layout(:create, "sjcl.js", "crypto.coffee")
+    render_with_layout(:create, ["sjcl.js", "crypto.coffee"])
   end
 
   get "/link/:hash_id" do
@@ -58,7 +58,8 @@ class PadApp < Sinatra::Base
   end
 
   get "/pads/:hash_id" do
-    render_with_layout(:pad, "sjcl.js", "crypto.coffee")
+    no_password = Pad[:hash_id => params[:hash_id]].pad_security_option.no_password
+    render_with_layout(:pad, ["sjcl.js", "crypto.coffee"], { :no_password => no_password })
   end
 
   # Returns the pad's text if the password was correct
@@ -68,7 +69,8 @@ class PadApp < Sinatra::Base
     halt 401, "incorrect password" unless pad.correct_pass?(params[:password])
 
     # saving the password in the session for image decryption
-    session[:password] = params[:password]
+    # password is set to "" since if it's nil all the session is discarded.
+    session[:password] = params[:password] || ""
     session[:hash_id] = pad.hash_id
 
     content_type "application/json"
@@ -162,10 +164,11 @@ class PadApp < Sinatra::Base
   private
 
   # Renders the template with the base template which requires the template's coffee and scss file.
-  def render_with_layout(template, *additional_js)
+  # Will add script tags on the template for the additional_js and pass the locals to the template.
+  def render_with_layout(template, additional_js = [], locals = {})
     script_tags = ""
     additional_js.each { |fileName| script_tags << "<script src='/js/#{fileName}'></script>" }
-    erb :base, :locals => { :template => template, :script_tags => script_tags }
+    erb :base, :locals => locals.merge({ :template => template, :script_tags => script_tags })
   end
 
   def do_cron_job
