@@ -59,6 +59,7 @@ class PadApp < Sinatra::Base
 
   before "/pads/:hash_id*" do
     @pad = Pad[:hash_id => params[:hash_id]]
+    halt 404, "incorrect hash id" if @pad.nil?
   end
 
   get "/pads/:hash_id" do
@@ -68,7 +69,6 @@ class PadApp < Sinatra::Base
 
   # Returns the pad's text if the password was correct
   get "/pads/:hash_id/authenticate" do
-    halt 400, "invalid hash_id" if @pad.nil?
     halt 401, "incorrect password" unless @pad.correct_pass?(params[:password])
 
     # saving the password in the session for image decryption

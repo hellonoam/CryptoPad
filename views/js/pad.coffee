@@ -23,7 +23,8 @@ class Pad
 
     # The password dialog is launched only if the pad needs a password
     if $("#passwordModal").attr("data-noPassword") == "true"
-      $("#passwordDone").click()
+      # TODO: investigate this further, why is the session not set if there's no timeout?
+      setTimeout (-> $("#passwordDone").click()), 100
     else
       $("#passwordModal").modal({keyboard: false})
 
