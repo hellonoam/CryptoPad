@@ -57,35 +57,36 @@ class PadApp < Sinatra::Base
     erb :link, :locals => { :pad_link => pad_link }
   end
 
+  before "/pads/:hash_id*" do
+    @pad = Pad[:hash_id => params[:hash_id]]
+  end
+
   get "/pads/:hash_id" do
-    no_password = Pad[:hash_id => params[:hash_id]].pad_security_option.no_password
+    no_password = @pad.pad_security_option.no_password
     render_with_layout(:pad, ["sjcl.js", "crypto.coffee"], { :no_password => no_password })
   end
 
   # Returns the pad's text if the password was correct
   get "/pads/:hash_id/authenticate" do
-    pad = Pad[:hash_id => params[:hash_id]]
-    halt 400, "invalid hash_id" if pad.nil?
-    halt 401, "incorrect password" unless pad.correct_pass?(params[:password])
+    halt 400, "invalid hash_id" if @pad.nil?
+    halt 401, "incorrect password" unless @pad.correct_pass?(params[:password])
 
     # saving the password in the session for image decryption
-    # password is set to " " since if it's nil all the session is discarded.
-    session[:password] = params[:password] || " "
-    session[:hash_id] = pad.hash_id
+    session[:password] = params[:password]
+    session[:hash_id] = @pad.hash_id
 
     content_type "application/json"
-    if pad.encrypt_method == "client_side"
-      pad.public_model.to_json
+    if @pad.encrypt_method == "client_side"
+      @pad.public_model.to_json
     else
-      { :encrypt_method => pad.encrypt_method, :text => pad.decrypt_text(params[:password]),
-        :filenames => pad.filenames }.to_json
+      { :encrypt_method => @pad.encrypt_method, :text => @pad.decrypt_text(params[:password]),
+        :filenames => @pad.filenames }.to_json
     end
   end
 
   get "/pads/:hash_id/files/:filename" do
     redirect "/pads/#{params[:hash_id]}" if session[:hash_id] != params[:hash_id] || session[:hash_id].nil?
-    pad = Pad[:hash_id => params[:hash_id]]
-    pad_file = PadFile[:pad_id => pad.id, :filename => params[:filename]]
+    pad_file = PadFile[:pad_id => @pad.id, :filename => params[:filename]]
     halt 404, "file not found" if pad_file.nil?
     # Silly Chrome cancels the request if it's application/octet-stream
     # So the type is determined by the extension if that fails it's set to text which seems to be successful
