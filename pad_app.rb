@@ -69,8 +69,8 @@ class PadApp < Sinatra::Base
     halt 401, "incorrect password" unless pad.correct_pass?(params[:password])
 
     # saving the password in the session for image decryption
-    # password is set to "" since if it's nil all the session is discarded.
-    session[:password] = params[:password] || ""
+    # password is set to " " since if it's nil all the session is discarded.
+    session[:password] = params[:password] || " "
     session[:hash_id] = pad.hash_id
 
     content_type "application/json"
@@ -86,6 +86,7 @@ class PadApp < Sinatra::Base
     redirect "/pads/#{params[:hash_id]}" if session[:hash_id] != params[:hash_id] || session[:hash_id].nil?
     pad = Pad[:hash_id => params[:hash_id]]
     pad_file = PadFile[:pad_id => pad.id, :filename => params[:filename]]
+    halt 404, "file not found" if pad_file.nil?
     # Silly Chrome cancels the request if it's application/octet-stream
     # So the type is determined by the extension if that fails it's set to text which seems to be successful
     # most of the time but not always. a PDF will fail when trying to download as text/plain
