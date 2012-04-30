@@ -8,6 +8,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.2.0)
+    colorize (0.5.8)
     daemons (1.1.8)
     diff-lcs (1.1.3)
     eventmachine (0.12.10)
@@ -68,6 +69,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-script
+  colorize
   faraday
   mime-types
   pg

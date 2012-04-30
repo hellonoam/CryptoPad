@@ -9,6 +9,7 @@ gem "sass"
 gem "mime-types"
 
 group :development, :test do
+  gem "colorize"
   gem "pry"
   gem "sqlite3"
   gem "rspec"
