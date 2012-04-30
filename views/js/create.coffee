@@ -51,7 +51,7 @@ class window.Create
       text = $("textarea").val()
       text = " " if text is "" # gets rid of server error when encrypting an empty string
       nakedPass = $("#password").val()
-      if !@securityOptions.noPassword and (nakedPass is "" or nakedPass.length < 5)
+      if !@securityOptions.noPassword? and (nakedPass is "" or nakedPass.length < 5)
         return Common.showErrorTooltip($("#password"), "choose a better password")
       pass = Crypto.PBKDF2(nakedPass, true)
       formData = new FormData()
