@@ -53,7 +53,7 @@ class window.Create
       nakedPass = $("#password").val()
       if !@securityOptions.noPassword? and (nakedPass is "" or nakedPass.length < 5)
         return Common.showErrorTooltip($("#password"), "choose a better password")
-      pass = Crypto.PBKDF2(nakedPass, true)
+      pass = if @securityOptions.noPassword? then "" else Crypto.PBKDF2(nakedPass, true)
       formData = new FormData()
       if @securityOptions.encryptionMethod is "clientSide"
         # TODO: make this more random.

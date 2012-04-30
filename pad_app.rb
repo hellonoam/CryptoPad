@@ -53,6 +53,7 @@ class PadApp < Sinatra::Base
     render_with_layout(:create, ["sjcl.js", "crypto.coffee"])
   end
 
+  # Gets some html that has the link embedded.
   get "/link/:hash_id" do
     port = (request.port == 80 || request.port == 443) ? "" : ":#{request.port}"
     pad_link = "#{request.scheme}://#{request.host}#{port}/pads/#{params[:hash_id]}"
@@ -86,10 +87,21 @@ class PadApp < Sinatra::Base
     end
   end
 
+  # Gets a specific file of the pad.
   get "/pads/:hash_id/files/:filename" do
-    redirect "/pads/#{params[:hash_id]}" if session[:hash_id] != params[:hash_id] || session[:hash_id].nil?
+    if !@pad.pad_security_option.no_password &&
+       (session[:hash_id] != params[:hash_id] || session[:hash_id].nil?)
+      redirect "/pads/#{params[:hash_id]}"
+    end
+
+    # In case the password is set to something else we reset it to "" when no password is selected.
+    # password can be set to something else if the user authenticated another pad and did not authenticate
+    # this one.
+    session[:password] = "" if @pad.pad_security_option.no_password
+
     pad_file = PadFile[:pad_id => @pad.id, :filename => params[:filename]]
     halt 404, "file not found" if pad_file.nil?
+
     # Silly Chrome cancels the request if it's application/octet-stream
     # So the type is determined by the extension if that fails it's set to text which seems to be successful
     # most of the time but not always. a PDF will fail when trying to download as text/plain

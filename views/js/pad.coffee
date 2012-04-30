@@ -2,14 +2,17 @@ class Pad
   @init = ->
     $("textarea").val("")
 
+    noPassword = $("#passwordModal").attr("data-noPassword") == "true"
+
     $("#passwordModal #password").keypress( (event) -> $("#passwordDone").click() if event.keyCode is 13 )
 
-    $("#passwordDone").click(->
+    $("#passwordDone").click(=>
       nakedPass = $("#password").val()
+      pass = if noPassword then "" else Crypto.PBKDF2(nakedPass, true)
       $.ajax
         url: "#{window.location.pathname}/authenticate"
         data:
-          password: Crypto.PBKDF2(nakedPass, true)
+          password: pass
         success: (data) ->
           if data.encrypt_method == "server_side"
             $("textarea").val(data.text)
@@ -22,9 +25,8 @@ class Pad
     )
 
     # The password dialog is launched only if the pad needs a password
-    if $("#passwordModal").attr("data-noPassword") == "true"
-      # TODO: investigate this further, why is the session not set if there's no timeout?
-      setTimeout (-> $("#passwordDone").click()), 100
+    if noPassword
+      $("#passwordDone").click()
     else
       $("#passwordModal").modal({keyboard: false})
 
