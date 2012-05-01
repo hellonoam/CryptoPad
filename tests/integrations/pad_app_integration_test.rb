@@ -10,6 +10,7 @@ require "net/http"
 # TODO: add tests to see if client side encryption works
 # TODO: add tests for no password
 # TODO: deleting pad when authorized and when not.
+# TODO: test that files and security options get deleted when pad is destroyed
 
 
 describe "The Pad App" do
