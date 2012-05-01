@@ -24,12 +24,14 @@
 - more security options (noam)
   done - let user choose client/server side encryption
   done - add option for no password
-  - add option for 'allow reader to destory?'
+  done - add option for 'allow reader to destory?'
   - when to delete
    - after X people read it
    done - after X days
    done (option added not implemented) - after multiple failed attempts
-   donw - never
+   done - never
+
+- help links to explain what things do, mainly for security options
 
 - share button
  - after the user created the pad allow to share directly from the site
