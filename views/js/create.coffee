@@ -37,12 +37,9 @@ class window.Create
       @overSizeLimit = false
       @overCountLimit = false
       for file in $("input[type=file]")[0].files
-        if file.size > @FILESIZELIMIT
-          @overSizeLimit = true
-        if @fileList.length >= @FILECOUNTLIMIT
-          @overCountLimit = true
-        if file.size <= @FILESIZELIMIT and @fileList.length < @FILECOUNTLIMIT
-          @fileList.push file
+        @overSizeLimit = true if file.size > @FILESIZELIMIT
+        @overCountLimit = true if @fileList.length >= @FILECOUNTLIMIT
+        @fileList.push file if file.size <= @FILESIZELIMIT and @fileList.length < @FILECOUNTLIMIT
       @renderFiles()
     )
 
