@@ -65,9 +65,19 @@ class PadApp < Sinatra::Base
     halt 404, "incorrect hash id" if @pad.nil?
   end
 
+  delete "/pads/:hash_id" do
+    if !@pad.pad_security_option.allow_reader_to_destroy || session[:hash_id] != params[:hash_id]
+      halt 401, "You are not authorized to delete this pad"
+    end
+
+    @pad.destroy
+    ""
+  end
+
   get "/pads/:hash_id" do
-    no_password = @pad.pad_security_option.no_password
-    render_with_layout(:pad, ["sjcl.js", "crypto.coffee"], { :no_password => no_password })
+    security = @pad.pad_security_option
+    render_with_layout(:pad, ["sjcl.js", "crypto.coffee"], { :no_password => security.no_password,
+        :hash_id => @pad.hash_id })
   end
 
   # Returns the pad's text if the password was correct
@@ -79,11 +89,13 @@ class PadApp < Sinatra::Base
     session[:hash_id] = @pad.hash_id
 
     content_type "application/json"
+
+    reader_destroy_hash = { :allow_reader_to_destroy => @pad.pad_security_option.allow_reader_to_destroy }
     if @pad.encrypt_method == "client_side"
-      @pad.public_model.to_json
+      @pad.public_model.merge(reader_destroy_hash).to_json
     else
       { :encrypt_method => @pad.encrypt_method, :text => @pad.decrypt_text(params[:password]),
-        :filenames => @pad.filenames }.to_json
+        :filenames => @pad.filenames }.merge(reader_destroy_hash).to_json
     end
   end
 
