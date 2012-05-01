@@ -40,7 +40,11 @@ class Pad
     $.ajax
       type:"delete"
       url:"/pads/#{@hashId}"
-      complete:
-        console.log "add feedback"
+      complete: (data, xhr) ->
+        if data.status is 200
+          $(".deletePadSuccess").show()
+          $("#deletePad").attr("disabled", true)
+        else
+          $(".deletePadFailed").show()
 
 $(document).ready(=> Pad.init() )

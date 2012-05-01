@@ -11,7 +11,7 @@ class window.Create
       if @securityOptions.noPassword
         @securityOptions.encryptMethod = "serverSide"
       $("input[name=encryptMethod]").attr("disabled", @securityOptions.noPassword?)
-      $("input[name=allowReaderToDestroy], input[name=destroyAfterDays]," +
+      $("input[name=destroyAfterDays]," +
         "input[name=destroyAfterMultipleFailedAttempts]," +
         "select").attr("disabled", @securityOptions.neverDestroy?)
     )
