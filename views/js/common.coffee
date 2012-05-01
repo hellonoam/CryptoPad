@@ -1,5 +1,8 @@
 class window.Common
   @init = ->
+    # Clicking on the close link removes the alert
+    $(".alert .close").click(-> $(this).parent().fadeOut("slow"))
+
     $("#signupModal input[type=email]").keypress( (event) ->
       $("#signupModal #signup").click() if event.keyCode is 13
     )
@@ -35,7 +38,7 @@ class window.Common
       link = if withLinks then "#{window.location.pathname}/files/#{filename}" else "#"
       target = if withLinks then "target='_blank'" else ""
       html += "<div class='row'>" +
-                  "<a class='filelink' href='#{link}' #{target}>" +
+                  "<a class='filelink' data-realName='#{filename}' href='#{link}' #{target}>" +
                     "#{if filename.length > 40 then filename.substr(0,37) + '...' else filename}" +
                   "</a>" +
                 "</div>"
