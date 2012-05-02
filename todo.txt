@@ -1,16 +1,10 @@
 - UI work
  - fix links
- - show click on file upload
 
 - uploading pipeline
- done - ability to remove some of the selected files (noam)
- done - feedback if files is over the size limit (noam)
  - move to S3
- done - do encryption / decryption of files (noam)
  - investigate client side encryption of files
  - investigate slow upload
- done - integration tests (noam)
- done - make sure deleting pad deletes files in db and in reality (noam)
 
 - generate random password upon request
 
@@ -21,15 +15,8 @@
  - exponential backoff
  - delete the pad after multiple attempts if option is set
 
-- more security options (noam)
-  done - let user choose client/server side encryption
-  done - add option for no password
-  done - add option for 'allow reader to destory?'
-  - when to delete
-   - after X people read it
-   done - after X days
-   done (option added not implemented) - after multiple failed attempts
-   done - never
+- more security options
+ - after X people read it
 
 - help links to explain what things do, mainly for security options
 
@@ -37,7 +24,7 @@
  - after the user created the pad allow to share directly from the site
 
 - premium
- - see all pad links
+ - see all pad links for a user
  - get notifications when someone reads the pad
  - unlimited file sharing
  - destroy after sending
