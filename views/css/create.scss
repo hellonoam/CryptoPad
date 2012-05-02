@@ -1,9 +1,30 @@
 .main {
-  #filesButton {
-    opacity: 0;
-    z-index: 1000;
-    position: absolute;
-    width: 119px;
+  /* kind of a hacky way to set the file icon to display hover*/
+  .fileWrapper:hover #filesButtonOverlay{
+    color: #333333;
+    text-decoration: none;
+    background-color: #e6e6e6;
+    background-position: 0 -15px;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -ms-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+    background-color: #2f96b4;
+  }
+
+  .fileWrapper {
+    display: inline;
+
+    #filesButton {
+      opacity: 0;
+      z-index: 1000;
+      position: absolute;
+      width: 119px;
+      cursor: pointer;
+    }
   }
   .securityOptions {
     margin-top: 20px;
