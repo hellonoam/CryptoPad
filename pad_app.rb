@@ -118,7 +118,11 @@ class PadApp < Sinatra::Base
     # So the type is determined by the extension if that fails it's set to text which seems to be successful
     # most of the time but not always. a PDF will fail when trying to download as text/plain
     content_type (MIME::Types.type_for(params[:filename]).first || "text/plain").to_s
-    pad_file.get_decrypted_file(session[:password])
+    begin
+      return pad_file.get_decrypted_file(session[:password])
+    rescue => e
+      halt 404, "an error ocurred with your file, it no longer exists"
+    end
   end
 
   # Creates a new pad and returns the hash_id

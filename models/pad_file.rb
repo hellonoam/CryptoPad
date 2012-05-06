@@ -11,14 +11,19 @@ class PadFile < Sequel::Model
     super(:iv => iv, :salt => salt, :pad_id => params[:pad_id], :filename => params[:filename])
   end
 
+# test these paths
   def get_decrypted_file(password)
-    path_to_file = "#{Dir.pwd}/file_transfers/#{self.pad.hash_id}/#{self.filename}"
+    raise "file not found" unless File.exists? path_to_file
     Crypto.decrypt_file(path_to_file, password, self.salt, self.iv)
   end
 
   def before_destroy
-    # add error handling - if file doesn't exist don't throw an error but if delete failed throw error.
-    File.delete "#{Dir.pwd}/file_transfers/#{self.pad.hash_id}/#{self.filename}"
+    return "" unless File.exists? path_to_file
+    File.delete path_to_file
+  end
+
+  def path_to_file
+    "#{Dir.pwd}/file_transfers/#{self.pad.hash_id}/#{self.filename}"
   end
 
 end
