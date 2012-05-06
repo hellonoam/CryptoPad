@@ -6,9 +6,7 @@ require File.join(Dir.pwd, "lib", "db")
 require File.join(Dir.pwd, "models", "all")
 require "net/http"
 
-# TODO: add tests to check file limits
 # TODO: add tests to see if client side encryption works
-# TODO: add tests for no password
 # TODO: deleting pad when authorized and when not.
 # TODO: test that files and security options get deleted when pad is destroyed
 
@@ -16,6 +14,8 @@ require "net/http"
 describe "The Pad App" do
 
   before(:all) do
+    @simplePass = "mypass"
+    @simpleText = "mytext"
     @conn = Faraday.new(:url => "http://localhost:8080") do |builder|
       builder.request :multipart
       builder.request :url_encoded
@@ -26,18 +26,56 @@ describe "The Pad App" do
 
   it "creates a pad and then retrieves it while using server side encryption" do
     # Creating the pad
-    last_response = @conn.post "/pads", { :text => "mytext", :password => "mypass" }
-    last_response.status.should == 200
-    hash_id = JSON.parse(last_response.body)["hash_id"]
+    hash_id = create_simple_pad
 
     # Checking retrieving works
-    last_response = @conn.get "/pads/#{hash_id}/authenticate?password=mypass"
+    last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
     last_response.status.should == 200
-    JSON.parse(last_response.body)["text"].should == "mytext"
+    JSON.parse(last_response.body)["text"].should == @simpleText
     JSON.parse(last_response.body)["encrypt_method"].should == "server_side"
 
     # Deletes the pad
     Pad[:hash_id => hash_id].destroy
+  end
+
+  it "doesn't let users destroy a pad before authentication" do
+    # Creating the pad
+    hash_id = create_simple_pad(:allowReaderToDestroy => true)
+
+    # Checking deletion route
+    last_response = @conn.delete "/pads/#{hash_id}"
+    last_response.status.should == 401
+
+    Pad[:hash_id => hash_id].destroy
+  end
+
+  it "doesn't let users destroy a pad if allow reader to destroy isn't set" do
+    # Creating the pad
+    hash_id = create_simple_pad
+
+    # Authenticating
+    last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
+    last_response.status.should == 200
+
+    # Checking deletion route
+    last_response = @conn.delete "/pads/#{hash_id}", { "Cookie" => last_response.headers["set-cookie"] }
+    last_response.status.should == 401
+
+    Pad[:hash_id => hash_id].destroy
+  end
+
+
+  it "lets users destroy a pad after authenticating if allow reader to destroy is set" do
+    # Creating the pad
+    hash_id = create_simple_pad(:allowReaderToDestroy => true)
+
+    # Authenticating
+    last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
+    last_response.status.should == 200
+
+    # Checking deletion route
+    last_response = @conn.delete "/pads/#{hash_id}", { "Cookie" => last_response.headers["set-cookie"] }
+    last_response.status.should == 200
   end
 
   describe "file upload" do
@@ -50,16 +88,16 @@ describe "The Pad App" do
 
     it "creates a pad with a file and checks that retrieving the file works" do
       # Creating the pad
-      hash_id = create_pad_with_file(" ", "mypass")
+      hash_id = create_pad_with_file(" ", "#{@simplePass}")
 
       # Authenticating the user for the pad
-      last_response = @conn.get "/pads/#{hash_id}/authenticate?password=mypass"
+      last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
       last_response.status.should == 200
       JSON.parse(last_response.body)["filenames"].should == [@filename]
 
       # Checking retrieving works
       last_response = @conn.get("/pads/#{hash_id}/files/#{@filename}",
-          { "Cookie" => last_response.headers["set-cookie"]})
+          { "Cookie" => last_response.headers["set-cookie"] })
       last_response.status.should == 200
       last_response.body.should == "#{@file_text}\n"
 
@@ -67,9 +105,30 @@ describe "The Pad App" do
       Pad[:hash_id => hash_id].destroy
     end
 
+    it "creates a pad with more files then allowed and checks that only first 4 were recieved" do
+      # Creating the pad
+      file_to_send = []
+      (0..4).each do
+        file_to_send.push Faraday::UploadIO.new(@filename, "application/form-data")
+      end
+      last_response = @conn.post "/pads", { :text => " ", :password => @simplePass, :file0 => file_to_send[0],
+        :file1 => file_to_send[1], :file2 => file_to_send[2], :file3 => file_to_send[3],
+        :file4 => file_to_send[4] }
+      last_response.status.should == 200
+      hash_id = JSON.parse(last_response.body)["hash_id"]
+
+      # Authenticating the user for the pad
+      last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
+      last_response.status.should == 200
+      JSON.parse(last_response.body)["filenames"].should == [@filename, @filename, @filename, @filename]
+
+      # Deletes the pad and the file
+      Pad[:hash_id => hash_id].destroy
+    end
+
     it "redirects to login page when trying to download a file without authenticating" do
       # Creating the pad
-      hash_id = create_pad_with_file(" ", "mypass")
+      hash_id = create_pad_with_file(" ", @simplePass)
 
       # Checking retrieving redirects
       last_response = @conn.get "/pads/#{hash_id}/files/#{@filename}"
@@ -83,6 +142,13 @@ describe "The Pad App" do
     after(:each) do
       File.delete(@filename)
     end
+  end
+
+  def create_simple_pad(security_options = {})
+    last_response = @conn.post "/pads", { :text => @simpleText, :password => @simplePass,
+        :securityOptions => security_options.to_json }
+    last_response.status.should == 200
+    JSON.parse(last_response.body)["hash_id"]
   end
 
   def create_pad_with_file(text, password)
