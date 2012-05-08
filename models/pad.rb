@@ -5,6 +5,7 @@ class Pad < Sequel::Model
 
   one_to_many :pad_files
   one_to_one :pad_security_option
+  one_to_one :failed_attempt
 
   # Creates a new pad with the text and password.
   def initialize(params)
@@ -30,6 +31,7 @@ class Pad < Sequel::Model
   def before_destroy
     self.pad_files.each { |f| f.destroy }
     self.pad_security_option.destroy
+    self.failed_attempt.destroy
   end
 
   def filenames

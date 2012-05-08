@@ -38,6 +38,19 @@ describe "The Pad App" do
     Pad[:hash_id => hash_id].destroy
   end
 
+  it "returns a 401 for retrieving a pad with incorrect password" do
+    # Creating the pad
+    hash_id = create_simple_pad
+
+    # Checking retrieving works
+    last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass.reverse}"
+    last_response.status.should == 401
+    last_response.body.should == "incorrect password"
+
+    # Deletes the pad
+    Pad[:hash_id => hash_id].destroy
+  end
+
   it "doesn't let users destroy a pad before authentication" do
     # Creating the pad
     hash_id = create_simple_pad(:allowReaderToDestroy => true)
@@ -74,9 +87,36 @@ describe "The Pad App" do
     last_response.status.should == 200
 
     # Checking deletion route
+    # TODO: fix this! it's not working because of xcrf
     last_response = @conn.delete "/pads/#{hash_id}", { "Cookie" => last_response.headers["set-cookie"] }
     last_response.status.should == 200
+
+    Pad[:hash_id => hash_id].destroy
   end
+
+  it "doesn't try to authenticate after more tries then allowed and before wait time" do
+    hash_id = fail_auth_allowed_times
+
+    # Trying to authenticate after more than allowed failed attempts
+    last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
+    last_response.status.should == 401
+    last_response.body.should == "Too many attempts, please wait"
+
+    Pad[:hash_id => hash_id].destroy
+  end
+
+  it "trys to authenticate after wait time has been achieved" do
+    hash_id = fail_auth_allowed_times
+
+    # TODO: change wait time to 0
+
+    # Trying to authenticate after more than allowed failed attempts
+    last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
+    last_response.status.should == 200
+
+    Pad[:hash_id => hash_id].destroy
+  end
+
 
   describe "file upload" do
     before(:each) do
@@ -157,4 +197,17 @@ describe "The Pad App" do
     last_response.status.should == 200
     JSON.parse(last_response.body)["hash_id"]
   end
+
+  def fail_auth_allowed_times
+    # Creating the pad
+    hash_id = create_simple_pad
+    # trying to authenticate with the wrong password
+    (1..FailedAttempt::ATTEMPTS_ALLOWED).each do
+      last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass.reverse}"
+      last_response.status.should == 401
+      last_response.body.should == "incorrect password"
+    end
+    hash_id
+  end
+
 end

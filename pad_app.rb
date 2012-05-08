@@ -82,7 +82,11 @@ class PadApp < Sinatra::Base
 
   # Returns the pad's text if the password was correct
   get "/pads/:hash_id/authenticate" do
-    halt 401, "incorrect password" unless @pad.correct_pass?(params[:password])
+    halt 401, "Too many attempts, please wait" unless @pad.failed_attempt.allow_attempt?
+    unless @pad.correct_pass?(params[:password])
+      @pad.failed_attempt.increment_tries
+      halt 401, "incorrect password"
+    end
 
     # saving the password in the session for image decryption
     session[:password] = params[:password]
@@ -130,7 +134,8 @@ class PadApp < Sinatra::Base
     pad = Pad.new(params)
     pad.save
 
-    PadSecurityOption.new(JSON.parse(params[:securityOptions] || "{}").merge( :pad_id => pad.id )).save
+    PadSecurityOption.new(JSON.parse(params[:securityOptions] || "{}").merge(:pad_id => pad.id)).save
+    FailedAttempt.new(:pad_id => pad.id).save
 
     # Saving the files that were uploaded.
     (0...FILE_COUNT_LIMIT).each do |i|
