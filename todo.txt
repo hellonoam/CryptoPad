@@ -1,5 +1,18 @@
+- fix 2 integration tests
+
 - UI work
- - fix links
+ - fix links to twitter + FB
+
+- protect against brute force attacks
+ done - exponential backoff
+ - front-end for wait time.
+ - delete the pad after multiple attempts if option is set
+
+- help links to explain what things do, mainly for security options
+
+- share button
+ - after the user created the pad allow to share directly from the site
+
 
 - uploading pipeline
  - move to S3
@@ -11,17 +24,8 @@
 - client-side encryption
  - investigate using some of the cryptoCat JS crypto
 
-- protect against brute force attacks
- - exponential backoff
- - delete the pad after multiple attempts if option is set
-
 - more security options
  - after X people read it
-
-- help links to explain what things do, mainly for security options
-
-- share button
- - after the user created the pad allow to share directly from the site
 
 - premium
  - see all pad links for a user
