@@ -19,7 +19,10 @@ class FailedAttempt < Sequel::Model
 
   def increment_tries
     self.count = self.count + 1
-    return self.pad.destroy if self.count >= ATTEMPTS_ALLOWED_UNTIL_DESTROY
+    if self.count >= ATTEMPTS_ALLOWED_UNTIL_DESTROY &&
+       self.pad.pad_security_option.destroy_after_multiple_failed_attempts
+      return self.pad.destroy
+    end
     self.last_try_at = Time.now
     self.save
   end
