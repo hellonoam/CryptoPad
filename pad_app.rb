@@ -14,7 +14,7 @@ class PadApp < Sinatra::Base
   enable :sessions
   enable :logging
 
-  # TODO: change key of session and set fields for cookie
+  # TODO: change key of session and set fields for cookie.
 
   FILE_SIZE_LIMIT = 20 * 1000 * 1000 # 20 MB
   FILE_COUNT_LIMIT = 4
