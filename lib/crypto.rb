@@ -37,7 +37,7 @@ module Crypto
     iv
   end
 
-  def self.decrypt_file(filename, bucket, password, salt, iv, &block)
+  def self.decrypt_file(filename, bucket, password, salt, iv)
     key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password.to_s, salt, 2000, 256)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.decrypt
