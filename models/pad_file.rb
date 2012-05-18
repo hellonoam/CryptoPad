@@ -10,7 +10,8 @@ class PadFile < Sequel::Model
     encrypted_file_path = "#{params[:temp_file_path]}.encrypted"
     iv = Crypto.encrypt_file(params[:temp_file_path], encrypted_file_path, params[:password], salt)
     File.delete(params[:temp_file_path])
-    AWS::S3::S3Object.store("#{self.pad.hash_id}/#{params[:filename]}", File.open(encrypted_file_path), PadApp::AWS_BUCKET)
+    AWS::S3::S3Object.store("#{Pad[params[:pad_id]].hash_id}/#{params[:filename]}",
+        File.open(encrypted_file_path), PadApp::AWS_BUCKET)
     File.delete(encrypted_file_path)
     super(:iv => iv, :salt => salt, :pad_id => params[:pad_id], :filename => params[:filename])
   end
