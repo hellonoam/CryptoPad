@@ -7,6 +7,7 @@ gem "sequel"
 gem "coffee-script"
 gem "sass"
 gem "mime-types"
+gem "aws-s3"
 
 group :development, :test do
   gem "colorize"

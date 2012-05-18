@@ -6,6 +6,7 @@ require "coffee-script"
 require "sass"
 require "json"
 require "mime/types"
+require "aws/s3"
 
 class PadApp < Sinatra::Base
 
@@ -25,11 +26,22 @@ class PadApp < Sinatra::Base
 
   configure do
     use Rack::CommonLogger
+
+    AWS::S3::Base.establish_connection!(
+      :access_key_id     => ENV["AWS_ACCESS_KEY_ID"],
+      :secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"]
+    )
+  end
+
+  configure :production do
+    AWS_BUCKET = "cryptoPadProd"
   end
 
   configure :development do
     $stderr.sync
     $debug_mode = true
+
+    AWS_BUCKET = "cryptoPadDev"
 
     require "sinatra/reloader"
     register Sinatra::Reloader
@@ -148,13 +160,11 @@ class PadApp < Sinatra::Base
         File.delete(file_params[:tempfile].path)
         next
       end
-      pad_dir = "#{settings.root}/file_transfers/#{pad.hash_id}"
-      new_path = "#{pad_dir}/#{file_params[:filename]}"
+
       puts "  Received file size for #{file_params[:filename]}: #{File.size(file_params[:tempfile].path)}"
-      FileUtils.mkdir(pad_dir) unless File.exist?(pad_dir)
 
       PadFile.new( :pad_id => pad.id, :filename => file_params[:filename], :password => params[:password],
-                   :temp_file_path => file_params[:tempfile].path, :new_file_path => new_path ).save
+                   :temp_file_path => file_params[:tempfile].path ).save
     end
 
     content_type "application/json"
