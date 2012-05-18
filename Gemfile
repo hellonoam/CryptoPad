@@ -14,6 +14,7 @@ group :development, :test do
   gem "sqlite3"
   gem "rspec"
   gem "faraday"
+  gem "foreman"
 end
 
 group :production do
