@@ -3,7 +3,8 @@
 class FailedAttempt < Sequel::Model
 
   ATTEMPTS_ALLOWED = 4
-  WAIT_TIME = 60 # 5 mins
+  ATTEMPTS_ALLOWED_UNTIL_DESTROY = 40
+  WAIT_TIME = 60 # 1 mins
 
   many_to_one :pad
 
@@ -18,8 +19,8 @@ class FailedAttempt < Sequel::Model
 
   def increment_tries
     self.count = self.count + 1
+    return self.pad.destroy if self.count >= ATTEMPTS_ALLOWED_UNTIL_DESTROY
     self.last_try_at = Time.now
-    # Maybe delete the pad if count is over X.
     self.save
   end
 
