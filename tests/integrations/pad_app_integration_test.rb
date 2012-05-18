@@ -94,7 +94,7 @@ describe "The Pad App" do
     Pad[:hash_id => hash_id].destroy
   end
 
-  it "doesn't try to authenticate after more tries then allowed and before wait time" do
+  it "doesn't try to authenticate after more tries than allowed and before wait time" do
     hash_id = fail_auth_allowed_times
 
     # Trying to authenticate after more than allowed failed attempts
@@ -105,7 +105,7 @@ describe "The Pad App" do
     Pad[:hash_id => hash_id].destroy
   end
 
-  it "trys to authenticate after wait time has been achieved" do
+  it "tries to authenticate after wait time has been achieved" do
     hash_id = fail_auth_allowed_times
 
     # TODO: change wait time to 0
@@ -116,7 +116,6 @@ describe "The Pad App" do
 
     Pad[:hash_id => hash_id].destroy
   end
-
 
   describe "file upload" do
     before(:each) do
