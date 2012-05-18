@@ -34,14 +34,14 @@ class PadApp < Sinatra::Base
   end
 
   configure :production do
-    AWS_BUCKET = "cryptoPadProd"
+    AWS_BUCKET = "cryptopadprod"
   end
 
   configure :development do
     $stderr.sync
     $debug_mode = true
 
-    AWS_BUCKET = "cryptoPadDev"
+    AWS_BUCKET = "cryptopaddev"
 
     require "sinatra/reloader"
     register Sinatra::Reloader

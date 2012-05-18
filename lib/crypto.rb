@@ -37,22 +37,18 @@ module Crypto
     iv
   end
 
-  def self.decrypt_file(file_path, password, salt, iv)
+  def self.decrypt_file(filename, bucket, password, salt, iv, &block)
     key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password.to_s, salt, 2000, 256)
     aes = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
     aes.decrypt
     aes.key = key
     aes.iv = iv
     data = ""
-    File.open(file_path, "r") do |f|
-      loop do
-        crypted_buffer = f.read(4096)
-        break unless crypted_buffer
-        decrypted_buffer = aes.update(crypted_buffer)
-        data << decrypted_buffer
-      end
-      data << aes.final
+    AWS::S3::S3Object.stream(filename, bucket) do |crypted_buffer|
+      decrypted_buffer = aes.update(crypted_buffer)
+      data << decrypted_buffer
     end
+    data << aes.final
     data
   end
 
