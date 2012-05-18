@@ -1,3 +1,4 @@
+require "aws/s3"
 require File.join(Dir.pwd, "lib", "crypto")
 
 class PadFile < Sequel::Model
