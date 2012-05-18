@@ -23,8 +23,11 @@ class PadApp < Sinatra::Base
     puts do_cron_job
   end
 
-  configure :development do
+  configure do
     use Rack::CommonLogger
+  end
+
+  configure :development do
     $stderr.sync
     $debug_mode = true
 
