@@ -27,7 +27,9 @@ class Pad
           $(".fileslinks").html(Common.htmlForLinks(data.filenames, "You've got some files as well:", true))
           $("#passwordModal").modal("hide")
         error: (data) ->
-          Common.showErrorTooltip($("#password"), "incorrect password")
+          # Kind of a hack to get the tooltip to change the text after it's set once.
+          Common.TooltipText = data.responseText
+          Common.showErrorTooltip($("#password"), (-> Common.TooltipText))
     )
 
     # The password dialog is launched only if the pad needs a password

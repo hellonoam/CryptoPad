@@ -23,10 +23,10 @@ class window.Common
           console.log("ERROR: email save failed. data: #{data}")
     )
 
-  @showErrorTooltip = (element, text) ->
+  @showErrorTooltip = (element, textOrFunction) ->
     element.focus(-> element.removeClass("error"))
     element.addClass("error")
-    element.tooltip( title: text, trigger: "manual" )
+    element.tooltip( title: textOrFunction, trigger: "manual" )
     element.tooltip("show")
     setTimeout((-> element.tooltip("hide")), 2000)
 

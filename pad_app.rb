@@ -97,7 +97,7 @@ class PadApp < Sinatra::Base
 
   # Returns the pad's text if the password was correct
   get "/pads/:hash_id/authenticate" do
-    halt 401, "Too many attempts, please wait" unless @pad.failed_attempt.allow_attempt?
+    halt 403, "Too many attempts, try again later" unless @pad.failed_attempt.allow_attempt?
     unless @pad.correct_pass?(params[:password])
       @pad.failed_attempt.increment_tries
       halt 401, "incorrect password"
