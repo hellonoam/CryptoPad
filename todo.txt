@@ -1,21 +1,11 @@
 - fix 2 integration tests
 
-- UI work
- - fix links to twitter + FB
-
-- protect against brute force attacks
- done - exponential backoff
- - front-end for wait time.
- - delete the pad after multiple attempts if option is set
-
 - help links to explain what things do, mainly for security options
 
 - share button
  - after the user created the pad allow to share directly from the site
 
-
 - uploading pipeline
- - move to S3
  - investigate client side encryption of files
  - investigate slow upload
 
@@ -27,7 +17,7 @@
 - more security options
  - after X people read it
 
-- premium
+- future:
  - see all pad links for a user
  - get notifications when someone reads the pad
  - unlimited file sharing
