@@ -31,7 +31,7 @@ class Pad < Sequel::Model
   def before_destroy
     self.pad_files.each { |f| f.destroy }
     self.pad_security_option.destroy
-    self.failed_attempt.destroy
+    self.failed_attempt.destroy unless self.failed_attempt.nil?
   end
 
   def filenames
