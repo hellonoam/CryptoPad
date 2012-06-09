@@ -226,7 +226,7 @@ class PadApp < Sinatra::Base
       return "cron job last ran on #{@@last_cron_run} and wasn't run again."
     end
     @@last_cron_run = Time.now
-    `rake delete_old_pads`
+    `bundle exec rake delete_expired_pads`
   end
 end
   
