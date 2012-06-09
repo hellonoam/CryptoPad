@@ -171,10 +171,6 @@ class PadApp < Sinatra::Base
     { :hash_id => pad.hash_id.to_s }.to_json
   end
 
-  post "/cron_job" do
-    do_cron_job
-  end
-
   post "/user" do
     User.new(:email => params[:email]).save
     ""
