@@ -7,6 +7,7 @@ require "sass"
 require "json"
 require "mime/types"
 require "aws/s3"
+require File.join(Dir.pwd, "lib", "force_ssl")
 
 class PadApp < Sinatra::Base
 
@@ -34,6 +35,7 @@ class PadApp < Sinatra::Base
   end
 
   configure :production do
+    use ForceSSL
     AWS_BUCKET = "cryptopadprod"
   end
 
