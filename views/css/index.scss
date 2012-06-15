@@ -45,4 +45,11 @@
 /* overrides the border left set by twitter bootstrap */
 blockquote {
   border-left: 0px !important;
+  p {
+    font-size: 15px;
+  }
+}
+/* a little more room for created by*/
+.footer .createdBy {
+  width: 150px;
 }

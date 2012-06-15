@@ -1,3 +1,4 @@
+# Forces all requests to be secure ones, i.e. over ssl
 class ForceSSL
   def initialize(app)
     @app = app
