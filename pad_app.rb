@@ -77,7 +77,7 @@ class PadApp < Sinatra::Base
     erb :link, :locals => { :pad_link => pad_link }
   end
 
-  before "/pads/:hash_id*" do
+  before "/pads/:hash_id/?*" do
     @pad = Pad[:hash_id => params[:hash_id]]
     halt 404, "incorrect hash id" if @pad.nil?
   end
