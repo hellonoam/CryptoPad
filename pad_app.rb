@@ -111,7 +111,8 @@ class PadApp < Sinatra::Base
 
     content_type "application/json"
 
-    reader_destroy_hash = { :allow_reader_to_destroy => @pad.pad_security_option.allow_reader_to_destroy }
+    reader_destroy_hash = { :allow_reader_to_destroy =>
+        @pad.pad_security_option.allow_reader_to_destroy }
     if @pad.encrypt_method == "client_side"
       @pad.public_model.merge(reader_destroy_hash).to_json
     else
