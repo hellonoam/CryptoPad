@@ -115,7 +115,8 @@ class PadApp < Sinatra::Base
     if @pad.encrypt_method == "client_side"
       @pad.public_model.merge(reader_destroy_hash).to_json
     else
-      { :encrypt_method => @pad.encrypt_method, :text => @pad.decrypt_text(params[:password]),
+      { :encrypt_method => @pad.encrypt_method,
+        :text => @pad.decrypt_text(params[:password]).force_encoding("utf-8"),
         :filenames => @pad.filenames }.merge(reader_destroy_hash).to_json
     end
   end
