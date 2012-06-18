@@ -4,6 +4,7 @@ require "rack/test"
 require "json"
 require File.join(Dir.pwd, "lib", "db")
 require File.join(Dir.pwd, "models", "all")
+require "./pad_app" # to get the AWS_BUCKET in pad_file.rb
 require "net/http"
 
 # TODO: add tests to see if client side encryption works
@@ -99,8 +100,8 @@ describe "The Pad App" do
 
     # Trying to authenticate after more than allowed failed attempts
     last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
-    last_response.status.should == 401
-    last_response.body.should == "Too many attempts, please wait"
+    last_response.status.should == 403
+    last_response.body.should == "Too many attempts, try again later"
 
     Pad[:hash_id => hash_id].destroy
   end
@@ -108,7 +109,7 @@ describe "The Pad App" do
   it "tries to authenticate after wait time has been achieved" do
     hash_id = fail_auth_allowed_times
 
-    # TODO: change wait time to 0
+    # TODO: Fix this! change wait time to 0
 
     # Trying to authenticate after more than allowed failed attempts
     last_response = @conn.get "/pads/#{hash_id}/authenticate?password=#{@simplePass}"
@@ -118,7 +119,7 @@ describe "The Pad App" do
   end
 
   describe "file upload" do
-    before(:each) do
+    before(:all) do
       # Creating the file to send
       @filename = "myfile.temp"
       @file_text = "text of file"
@@ -150,9 +151,9 @@ describe "The Pad App" do
       (0..4).each do
         file_to_send.push Faraday::UploadIO.new(@filename, "application/form-data")
       end
-      last_response = @conn.post "/pads", { :text => " ", :password => @simplePass, :file0 => file_to_send[0],
-        :file1 => file_to_send[1], :file2 => file_to_send[2], :file3 => file_to_send[3],
-        :file4 => file_to_send[4] }
+      last_response = @conn.post "/pads", { :text => " ", :password => @simplePass,
+        :file0 => file_to_send[0], :file1 => file_to_send[1], :file2 => file_to_send[2],
+        :file3 => file_to_send[3], :file4 => file_to_send[4] }
       last_response.status.should == 200
       hash_id = JSON.parse(last_response.body)["hash_id"]
 
@@ -178,7 +179,7 @@ describe "The Pad App" do
       Pad[:hash_id => hash_id].destroy
     end
 
-    after(:each) do
+    after(:all) do
       File.delete(@filename)
     end
   end
