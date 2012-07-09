@@ -77,10 +77,10 @@ class window.Create
       $("#passwordModal").modal("hide")
       # Disabling all buttons
       $("input, select, textarea").attr("disabled", true)
+      $(".status p").html("Your pad is uploading")
+      $(".status .progress").removeClass("hide")
       $.ajax
         xhr: ->
-          $(".status p").html("Your pad is uploading")
-          $(".status .progress").removeClass("hide")
           xhr = new XMLHttpRequest()
           xhr.upload.addEventListener("progress", (event) ->
             if (event.lengthComputable)
