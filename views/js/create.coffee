@@ -5,6 +5,10 @@ class window.Create
   @securityOptions = {}
 
   @init = ->
+    # Clearing the textarea and enabling fields in case the page is loaded from cache
+    $("input, select, textarea").attr("disabled", false)
+    $("textarea").val("")
+
     # Updating the securityOptions hash with the latest info from the form.
     $("form").change(=>
       @securityOptions = $("form").serializeObject()
