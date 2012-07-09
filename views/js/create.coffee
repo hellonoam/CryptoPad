@@ -100,7 +100,7 @@ class window.Create
             success: (linkHtml) ->
               $(".main").html(linkHtml)
         error: (data) ->
-          console.log("ERROR: #{data}")
+          console.log("ERROR: #{data.statusText}")
     )
 
   # Renders the filelist with appropriate warning messages if needed on the page.
