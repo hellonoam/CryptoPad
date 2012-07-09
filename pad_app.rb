@@ -147,6 +147,7 @@ class PadApp < Sinatra::Base
   end
 
   # Creates a new pad and returns the hash_id
+  # TODO: Add validation for required params.
   post "/pads" do
     pad = Pad.new(params)
     pad.save
