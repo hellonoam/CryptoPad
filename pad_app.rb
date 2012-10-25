@@ -26,10 +26,12 @@ class PadApp < Sinatra::Base
   configure do
     use Rack::CommonLogger
 
-    AWS::S3::Base.establish_connection!(
-      :access_key_id     => ENV["AWS_ACCESS_KEY_ID"],
-      :secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"]
-    )
+    if ENV["AWS_ACCESS_KEY_ID"] && ENV["AWS_SECRET_ACCESS_KEY"]
+      AWS::S3::Base.establish_connection!(
+        :access_key_id     => ENV["AWS_ACCESS_KEY_ID"],
+        :secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"]
+      )
+    end
   end
 
   configure :production do
