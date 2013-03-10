@@ -1,6 +1,6 @@
 CryptoPad
 ============================
-Developed by Noam Szpiro
+Developed by Noam Szpiro & Snir Kodesh
 
 Description
 -----------
