@@ -37,6 +37,7 @@ class PadApp < Sinatra::Base
   configure :production do
     use ForceSSL
     AWS_BUCKET = "cryptopadprod"
+    require "newrelic_rpm"
   end
 
   configure :development do

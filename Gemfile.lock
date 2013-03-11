@@ -29,6 +29,7 @@ GEM
     mime-types (1.17.2)
     multi_json (1.1.0)
     multipart-post (1.1.5)
+    newrelic_rpm (3.5.8.72)
     pg (0.13.2)
     pry (0.9.8.4)
       coderay (~> 1.0.5)
@@ -83,6 +84,7 @@ DEPENDENCIES
   faraday
   foreman
   mime-types
+  newrelic_rpm
   pg
   pry
   rake
