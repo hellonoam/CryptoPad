@@ -13,7 +13,6 @@ class PadApp < Sinatra::Base
 
   set :public_folder, "public"
   enable :sessions
-  enable :logging
 
   FILE_SIZE_LIMIT = 20 * 1000 * 1000 # 20 MB
   FILE_COUNT_LIMIT = 4
