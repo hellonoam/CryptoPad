@@ -11,6 +11,6 @@ The webapp allows uploading of up to 4 files. There are various security options
 
 Intructions
 -----------
-Use the Procfile to run the server locally (Foreman start). Run bundle install beforehand. The migration files are in the db/migrations folder. To run them, run bin/run__db__migrations
+Use the Procfile to run the server locally (Foreman start). Run bundle install beforehand. The migration files are in the db/migrations folder. To run them, run bin/run_db_migrations
 
 If you host your own solution make sure, you run the command "rake delete_expired_pads" once a day. 
